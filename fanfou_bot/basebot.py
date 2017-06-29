@@ -8,7 +8,6 @@ from urllib.error import HTTPError, URLError
 from fanpy.api import Fanfou, FanfouHTTPError
 from fanpy.oauth import OAuth, read_token_file
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -53,20 +52,32 @@ class BaseBot(ABC):
 
         return chunks
 
-    def update_status(self, status, imagedata=None, retry_times=2, retry_interval=2):
+    def update_status(self, status, imagedata=None,
+                      in_reply_to_status_id=None, in_reply_to_user_id=None,
+                      repost_status_id=None,
+                      retry_times=2, retry_interval=2):
         previous_retry_times = 0
         final_status = status
 
         while True:
             try:
                 if imagedata is not None:
-                    self.fanfou.photos.upload(photo=imagedata, status=final_status)
+                    self.fanfou.photos.upload(
+                        photo=imagedata,
+                        status=final_status,
+                        in_reply_to_status_id=in_reply_to_status_id,
+                        in_reply_to_user_id=in_reply_to_user_id,
+                        repost_status_id=repost_status_id)
                 else:
-                    self.fanfou.statuses.update(status=final_status)
+                    self.fanfou.statuses.update(
+                        status=final_status,
+                        in_reply_to_status_id=in_reply_to_status_id,
+                        in_reply_to_user_id=in_reply_to_user_id,
+                        repost_status_id=repost_status_id)
                 break
             except FanfouHTTPError as e:
                 if e.e.code == 400:
-                    logger.warning('Duplicated status：{}'.format(final_status))
+                    logger.warning('Duplicated status: {}'.format(final_status))
                     final_status += '.'
                 else:
                     logger.warning(e)
@@ -96,7 +107,7 @@ class BaseBot(ABC):
                 break
             except FanfouHTTPError as e:
                 if e.e.code == 404:
-                    logger.warning('There is no message：{}'.format(id))
+                    logger.warning('There is no message: {}'.format(id))
                 else:
                     logger.warning(e)
             except Exception as e:
@@ -108,6 +119,17 @@ class BaseBot(ABC):
 
             time.sleep(retry_interval)
             continue
+
+    def get_mentions(self, since_id=None, max_id=None, count=None, page=None, mode=None):
+        """
+            If service is unstable, here also can retry
+        """
+        try:
+            return self.fanfou.statuses.mentions(
+                since_id=since_id, max_id=max_id, count=count, page=page, mode=mode)
+        except Exception as e:
+            # Will return None
+            logger.warning(e)
 
     @abstractmethod
     def make_status(self):
