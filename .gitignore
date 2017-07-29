@@ -103,3 +103,4 @@ ENV/
 settings.py
 token
 *.db
+handled_mentions.p

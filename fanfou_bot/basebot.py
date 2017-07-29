@@ -9,6 +9,11 @@ from fanpy.api import Fanfou, FanfouHTTPError
 from fanpy.oauth import OAuth, read_token_file
 
 
+RETRY_TIMES = 2
+RETRY_INTERVAL = 2
+TIMEOUT = 10
+
+
 class BaseBot(ABC):
     def __init__(self, consumer_key, consumer_secret,
                  creds_file='token', index_file='index.txt',
@@ -66,8 +71,8 @@ class BaseBot(ABC):
     def update_status(self, status, imagedata=None,
                       in_reply_to_status_id=None, in_reply_to_user_id=None,
                       repost_status_id=None,
-                      retry_times=2, retry_interval=2,
-                      timeout=10):
+                      retry_times=RETRY_TIMES, retry_interval=RETRY_INTERVAL,
+                      timeout=TIMEOUT):
         previous_retry_times = 0
         final_status = status
 
@@ -80,14 +85,14 @@ class BaseBot(ABC):
                         in_reply_to_status_id=in_reply_to_status_id,
                         in_reply_to_user_id=in_reply_to_user_id,
                         repost_status_id=repost_status_id,
-                        timeout=timeout)
+                        _timeout=timeout)
                 else:
                     return self.fanfou.statuses.update(
                         status=final_status,
                         in_reply_to_status_id=in_reply_to_status_id,
                         in_reply_to_user_id=in_reply_to_user_id,
                         repost_status_id=repost_status_id,
-                        timeout=timeout)
+                        _timeout=timeout)
             except FanfouHTTPError as e:
                 if e.e.code == 400:
                     self.logger.warning('Duplicated status: {}'.format(final_status))
@@ -104,7 +109,9 @@ class BaseBot(ABC):
             time.sleep(retry_interval)
             continue
 
-    def destroy_status(self, id=None, retry_times=0, retry_interval=2, timeout=10):
+    def destroy_status(self, id=None,
+                       retry_times=RETRY_TIMES, retry_interval=RETRY_INTERVAL,
+                       timeout=TIMEOUT):
         """
             If id is None, then deletes the latest status
         """
@@ -113,10 +120,8 @@ class BaseBot(ABC):
         while True:
             try:
                 if id is None:
-                    latest_status_id = self.fanfou.statuses.user_timeline(count=1, timeout=timeout)[0]['id']
-                    self.fanfou.statuses.destroy(_id=latest_status_id, timeout=timeout)
-                else:
-                    self.fanfou.statuses.destroy(_id=id, timeout=timeout)
+                    id = self.fanfou.statuses.user_timeline(count=1, _timeout=timeout)[0]['id']
+                self.fanfou.statuses.destroy(_id=id, _timeout=timeout)
                 break
             except FanfouHTTPError as e:
                 if e.e.code == 404:
@@ -133,20 +138,34 @@ class BaseBot(ABC):
             time.sleep(retry_interval)
             continue
 
-    def get_mentions(self, since_id=None, max_id=None, count=None, page=None, mode=None, timeout=10):
+    def get_mentions(self, since_id=None, max_id=None,
+                     count=None, page=None, mode=None,
+                     retry_times=RETRY_TIMES, retry_interval=RETRY_INTERVAL,
+                     timeout=TIMEOUT):
         """
-            If service is unstable, here also can retry
+            Default count is 60
         """
-        try:
-            if since_id is None:
-                return self.fanfou.statuses.mentions(
-                    max_id=max_id, count=count, page=page, mode=mode, timeout=timeout)
-            else:
-                return self.fanfou.statuses.mentions(
-                    since_id=since_id, max_id=max_id, count=count, page=page, mode=mode, timeout=timeout)
-        except Exception as e:
-            # Will return None
-            self.logger.warning(e)
+        previous_retry_times = 0
+
+        while True:
+            try:
+                if since_id is None:
+                    return self.fanfou.statuses.mentions(
+                        max_id=max_id, count=count, page=page, mode=mode, _timeout=timeout)
+                else:
+                    return self.fanfou.statuses.mentions(
+                        since_id=since_id, max_id=max_id, count=count, page=page, mode=mode, _timeout=timeout)
+                break
+            except Exception as e:
+                # Will return None
+                self.logger.warning(e)
+
+            previous_retry_times += 1
+            if previous_retry_times > retry_times:
+                break
+
+            time.sleep(retry_interval)
+            continue
 
     @abstractmethod
     def start(self):
