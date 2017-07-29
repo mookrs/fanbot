@@ -1,27 +1,34 @@
 import logging
 import os
+import sys
 import time
-
 from abc import ABC, abstractmethod
 from urllib.error import HTTPError, URLError
 
 from fanpy.api import Fanfou, FanfouHTTPError
 from fanpy.oauth import OAuth, read_token_file
 
+from .settings import ConsumerKey, ConsumerSecret
 
 RETRY_TIMES = 2
 RETRY_INTERVAL = 2
 TIMEOUT = 10
 
 
+def get_abs_path(module_file, path):
+    return os.path.join(os.path.dirname(os.path.abspath(module_file)), path)
+
+
 class BaseBot(ABC):
-    def __init__(self, consumer_key, consumer_secret,
+    def __init__(self, consumer_key=ConsumerKey, consumer_secret=ConsumerSecret,
                  creds_file='token', index_file='index.txt',
                  logging_level=logging.WARNING):
+        child_cls_dir = os.path.dirname(sys.modules[self.__module__].__file__)
+
         self.consumer_key = consumer_key
         self.consumer_secret = consumer_secret
-        self.creds_file = creds_file
-        self.index_file = index_file
+        self.creds_file = os.path.join(child_cls_dir, creds_file)
+        self.index_file = os.path.join(child_cls_dir, index_file)
         self.fanfou = self._init_fanfou()
         self.logger = self._init_logger(logging_level)
 
@@ -31,16 +38,16 @@ class BaseBot(ABC):
             oauth_token, oauth_token_secret, self.consumer_key, self.consumer_secret))
 
     def _init_logger(self, logging_level):
-        logger = logging.getLogger(__name__)
+        logger = logging.getLogger('.'.join([__name__, self.__class__.__name__]))
         logger.setLevel(logging_level)
 
-        handler = logging.StreamHandler()
-        handler.setLevel(logging_level)
+        sh = logging.StreamHandler()
+        sh.setLevel(logging_level)
 
-        formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-        handler.setFormatter(formatter)
+        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        sh.setFormatter(formatter)
 
-        logger.addHandler(handler)
+        logger.addHandler(sh)
 
         return logger
 
@@ -55,7 +62,7 @@ class BaseBot(ABC):
         with open(self.index_file, 'w') as f:
             f.write(str(current_index + 1))
 
-    def get_chunks(self, status, separtor='...', chunk_length=140):
+    def get_chunks(self, status, separtor='...', chunk_length=140, is_reversed=False):
         slice_length = chunk_length - len(separtor)
 
         chunks = []
@@ -66,9 +73,12 @@ class BaseBot(ABC):
             status = status[slice_length:]
         chunks.append(status)
 
+        if is_reversed:
+            chunks.reverse()
+
         return chunks
 
-    def update_status(self, status, imagedata=None,
+    def update_status(self, status, photo=None,
                       in_reply_to_status_id=None, in_reply_to_user_id=None,
                       repost_status_id=None,
                       retry_times=RETRY_TIMES, retry_interval=RETRY_INTERVAL,
@@ -78,9 +88,9 @@ class BaseBot(ABC):
 
         while True:
             try:
-                if imagedata is not None:
+                if photo is not None:
                     return self.fanfou.photos.upload(
-                        photo=imagedata,
+                        photo=photo,
                         status=final_status,
                         in_reply_to_status_id=in_reply_to_status_id,
                         in_reply_to_user_id=in_reply_to_user_id,
@@ -168,5 +178,5 @@ class BaseBot(ABC):
             continue
 
     @abstractmethod
-    def start(self):
+    def run(self):
         pass
