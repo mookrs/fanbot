@@ -63,15 +63,23 @@ class BaseBot(ABC):
             f.write(str(current_index + 1))
 
     def get_chunks(self, status, separtor='...', chunk_length=140, is_reversed=False):
-        slice_length = chunk_length - len(separtor)
+        slice_length_1x = chunk_length - len(separtor)
+        slice_length_2x = chunk_length - len(separtor) * 2
 
         chunks = []
-        while len(status) > chunk_length:
-            status_slice = status[:slice_length]
+        if len(status) <= chunk_length:
+            chunks.append(status)
+        else:
+            status_slice = status[:slice_length_1x]
             chunk = status_slice + separtor
             chunks.append(chunk)
-            status = status[slice_length:]
-        chunks.append(status)
+            status = status[slice_length_1x:]
+            while len(status) > slice_length_1x:
+                status_slice = status[:slice_length_2x]
+                chunk = separtor + status_slice + separtor
+                chunks.append(chunk)
+                status = status[slice_length_2x:]
+            chunks.append(separtor + status)
 
         if is_reversed:
             chunks.reverse()
