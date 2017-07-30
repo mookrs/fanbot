@@ -23,22 +23,23 @@ class BaseBot(ABC):
     def __init__(self, consumer_key=ConsumerKey, consumer_secret=ConsumerSecret,
                  creds_file='token', index_file='index.txt',
                  logging_level=logging.WARNING):
-        child_cls_dir = os.path.dirname(sys.modules[self.__module__].__file__)
+        child_module_name = self.__module__.
+        child_cls_dir = os.path.dirname(sys.modules[child_module_name].__file__)
 
         self.consumer_key = consumer_key
         self.consumer_secret = consumer_secret
         self.creds_file = os.path.join(child_cls_dir, creds_file)
         self.index_file = os.path.join(child_cls_dir, index_file)
         self.fanfou = self._init_fanfou()
-        self.logger = self._init_logger(logging_level)
+        self.logger = self._init_logger(child_module_name, logging_level)
 
     def _init_fanfou(self):
         oauth_token, oauth_token_secret = read_token_file(self.creds_file)
         return Fanfou(auth=OAuth(
             oauth_token, oauth_token_secret, self.consumer_key, self.consumer_secret))
 
-    def _init_logger(self, logging_level):
-        logger = logging.getLogger('.'.join([__name__, self.__class__.__name__]))
+    def _init_logger(self, child_module_name, logging_level):
+        logger = logging.getLogger(child_module_name)
         logger.setLevel(logging_level)
 
         sh = logging.StreamHandler()

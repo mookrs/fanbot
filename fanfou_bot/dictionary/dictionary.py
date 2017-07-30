@@ -1,7 +1,4 @@
 #!/usr/bin/env python3
-import os
-import logging
-
 from ..basebot import BaseBot, get_abs_path
 from ..db import DBHelper
 
@@ -12,9 +9,6 @@ db = DBHelper(DATABASE)
 class DictionaryBot(BaseBot):
     def __init__(self):
         super(DictionaryBot, self).__init__()
-        # print('.'.join([__name__, self.__class__.__name__]))
-        self.logger = logging.getLogger('.'.join([__name__, self.__class__.__name__]))
-        # self.logger.warning('ddd')
 
     def make_status(self):
         row_id = self._get_current_index()
