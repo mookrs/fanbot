@@ -105,4 +105,7 @@ token
 *.db
 index.txt
 parser/
+false/
+special/
+true/
 handled_mentions.p
