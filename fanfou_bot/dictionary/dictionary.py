@@ -15,18 +15,14 @@ class DictionaryBot(BaseBot):
         self._increase_index(row_id)
 
         code = 'CP000000000' + str(10000000 + row_id)
-        sql = 'SELECT item, explanation, type FROM xinhua WHERE code="{}";'.format(code)
-        row = db.query(sql, one=True)
+        row = db.query('SELECT * FROM xinhua WHERE code="{}";'.format(code), one=True)
         item, explanation, item_type = row['item'], row['explanation'], row['type']
 
         # 1 单字 2 词语
         # 3 Unicode扩展区或用繁体代替的字
         # 4 Unicode扩展区或用繁体代替的词语
         # 5 重复项 6 页面不存在
-        if item_type == 1 or item_type == 4:
-            status = '{} {}'.format(item, explanation)
-        else:
-            status = None
+        status = '{} {}'.format(item, explanation) if item_type in (1, 4) else None
         return status
 
     def run(self):
