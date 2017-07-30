@@ -189,3 +189,6 @@ class BaseBot(ABC):
     @abstractmethod
     def run(self):
         pass
+
+    def start(self):
+        pass
