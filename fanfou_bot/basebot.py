@@ -62,7 +62,7 @@ class BaseBot(ABC):
         with open(self.index_file, 'w') as f:
             f.write(str(current_index + 1))
 
-    def get_chunks(self, status, separtor='...', chunk_length=140, is_reversed=False):
+    def get_chunks(self, status, separtor='...', chunk_length=140, is_reversed=True):
         slice_length_1x = chunk_length - len(separtor)
         slice_length_2x = chunk_length - len(separtor) * 2
 
