@@ -103,4 +103,6 @@ ENV/
 settings.py
 token
 *.db
+index.txt
+parser/
 handled_mentions.p
