@@ -17,7 +17,7 @@ class ShuowenBot(BaseBot):
         row = db.query('SELECT * FROM shuowen WHERE id="{}";'.format(row_id), one=True)
         radical, character, pinyin, explaination, fanqie = row['radical'], row['character'], row['pinyin'], row['explaination'], row['fanqie']
 
-        # 7 个字没有反切
+        # NOTE: 7 个字没有反切
         status = '【{}】【{}】【{}|{}】{}'.format(radical, character, pinyin, fanqie, explaination)
         chunks = self.get_chunks(status)
 

@@ -18,6 +18,7 @@ class DictionaryBot(BaseBot):
         row = db.query('SELECT * FROM xinhua WHERE code="{}";'.format(code), one=True)
         item, explanation, item_type = row['item'], row['explanation'], row['type']
 
+        # NOTE:
         # 1 单字 2 词语
         # 3 Unicode扩展区或用繁体代替的字
         # 4 Unicode扩展区或用繁体代替的词语
