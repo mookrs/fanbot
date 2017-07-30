@@ -7,8 +7,8 @@ db = DBHelper(DATABASE)
 
 
 class DictionaryBot(BaseBot):
-    def __init__(self):
-        super(DictionaryBot, self).__init__()
+    def __init__(self, *args, **kwargs):
+        super(DictionaryBot, self).__init__(*args, **kwargs)
 
     def make_status(self):
         row_id = self._get_current_index()

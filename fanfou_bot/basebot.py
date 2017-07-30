@@ -23,7 +23,7 @@ class BaseBot(ABC):
     def __init__(self, consumer_key=ConsumerKey, consumer_secret=ConsumerSecret,
                  creds_file='token', index_file='index.txt',
                  logging_level=logging.WARNING):
-        child_module_name = self.__module__.
+        child_module_name = self.__module__
         child_cls_dir = os.path.dirname(sys.modules[child_module_name].__file__)
 
         self.consumer_key = consumer_key
