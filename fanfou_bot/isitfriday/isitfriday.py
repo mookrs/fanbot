@@ -27,7 +27,6 @@ class IsItFridayBot(BaseBot):
 
     def get_random_img(self, dir_name):
         image = self.get_img_path(get_abs_path(__file__, dir_name))
-        print(image)
         with open(image, 'rb') as imagefile:
             return imagefile.read()
 
