@@ -1,4 +1,5 @@
 import json
+import time
 
 from urllib.error import URLError
 from urllib.parse import quote
@@ -65,7 +66,7 @@ class SpiderBot(BaseBot):
         return url_short
 
     def accepted_img_type(self, mime, *img_types):
-        return any(img_type == mime for img_type in img_types)
+        return any(img_type in mime for img_type in img_types)
 
     def accepted_img_size(self, response):
         mime = response.info()['Content-Type']
