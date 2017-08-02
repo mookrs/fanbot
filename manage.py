@@ -6,6 +6,7 @@ from fanfou_bot.dictionary import dictionary
 from fanfou_bot.fish import fish
 from fanfou_bot.isitfriday import isitfriday
 from fanfou_bot.jandan import jandan
+from fanfou_bot.reddit import reddit
 from fanfou_bot.shuowen import shuowen
 from fanfou_bot.yupian import yupian
 
@@ -18,6 +19,7 @@ def main():
     parser.add_argument('--fish', help='fish bot', action='store_true')
     parser.add_argument('--isitfriday', help='isitfriday bot', action='store_true')
     parser.add_argument('--jandan', help='jandan bot', action='store_true')
+    parser.add_argument('--reddit', help='reddit bot', action='store_true')
     parser.add_argument('--shuowen', help='shuowen bot', action='store_true')
     parser.add_argument('--yupian', help='yupian bot', action='store_true')
 
@@ -40,6 +42,9 @@ def main():
         bot.run()
     elif args.jandan:
         bot = jandan.JandanBot()
+        bot.run()
+    elif args.reddit:
+        bot = reddit.RedditBot()
         bot.run()
     elif args.shuowen:
         bot = shuowen.ShuowenBot()
