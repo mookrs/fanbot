@@ -6,6 +6,7 @@ from fanfou_bot.dictionary import dictionary
 from fanfou_bot.fish import fish
 from fanfou_bot.isitfriday import isitfriday
 from fanfou_bot.jandan import jandan
+from fanfou_bot.moegirl_daily import moegirl_daily
 from fanfou_bot.photo_of_the_day import photo_of_the_day
 from fanfou_bot.reddit import reddit
 from fanfou_bot.shuowen import shuowen
@@ -47,7 +48,8 @@ def main():
         bot = jandan.JandanBot()
         bot.run()
     elif args.moegirl_daily:
-        pass
+        bot = moegirl_daily.MoegirlDailyBot()
+        bot.run()
     elif args.photo_of_the_day:
         bot = photo_of_the_day.PhotoOfTheDayBot()
         bot.run()
