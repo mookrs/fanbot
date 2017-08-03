@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+import json
+
 from ..basebot import get_abs_path
 from ..spiderbot import SpiderBot
 from ..db import DBHelper
@@ -7,11 +9,10 @@ DATABASE = get_abs_path(__file__, 'photo_of_the_day.db')
 db = DBHelper(DATABASE)
 
 BASE_URL = 'http://www.nationalgeographic.com.cn'
-IMG_LIST_URL = 'http://www.nationalgeographic.com.cn/photography/photo_of_the_day/'
+API_IMG_LIST = 'http://www.nationalgeographic.com.cn/index.php?a=loadmorebya&catid=39&modelid=3'
 
 
 class PhotoOfTheDayBot(SpiderBot):
-
     def __init__(self, *args, **kwargs):
         super(PhotoOfTheDayBot, self).__init__(*args, **kwargs)
         self.opener = self.make_opener(('User-agent', 'Mozilla/5.0'))
@@ -21,12 +22,12 @@ class PhotoOfTheDayBot(SpiderBot):
         return True if record else False
 
     def get_recent_page_info(self):
-        soup = self.make_soup(IMG_LIST_URL, self.opener)
+        response = self.open_url(API_IMG_LIST)
+        data = json.load(response)
 
-        div = soup.find('div', {'class': 'showImg-list'})
-        relative_url = div.dl.a.get('href')
-        title = div.dl.dt.a.get_text()[5:]
-        desc = div.dl.dd.a.get_text()
+        relative_url = data[0]['url']
+        title = data[0]['title'][5:]
+        desc = data[0]['description']
 
         return BASE_URL + relative_url, title, desc
 
