@@ -34,9 +34,9 @@ class SpiderBot(BaseBot):
         while True:
             try:
                 if opener is None:
-                    response = urlopen(url, timeout=timeout)
+                    return urlopen(url, timeout=timeout)
                 else:
-                    response = opener.open(url, timeout=timeout)
+                    return opener.open(url, timeout=timeout)
                 break
             except URLError as e:
                 self.logger.warning('Exception at: {}'.format(url))
@@ -51,8 +51,6 @@ class SpiderBot(BaseBot):
 
             time.sleep(retry_interval)
             continue
-
-        return response
 
     def make_soup(self, url, opener=None, retry_times=RETRY_TIMES, retry_interval=RETRY_INTERVAL, timeout=TIMEOUT, parser='html.parser'):
         html = self.open_url(url, opener, retry_times, retry_interval, timeout)

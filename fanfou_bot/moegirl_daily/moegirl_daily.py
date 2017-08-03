@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import json
+import time
 from urllib.request import quote
 
 from ..spiderbot import SpiderBot
@@ -21,7 +22,7 @@ class MoegirlDailyBot(SpiderBot):
 
     def fetch_summary(self, page_url):
         # Use lxml instead of default html parser will get better soup
-        soup = self.make_soup(page_url, parser='lxml')
+        soup = self.make_soup(page_url, self.opener, parser='lxml')
         summary = ''
 
         # 处理「战舰少女」专题
@@ -44,7 +45,7 @@ class MoegirlDailyBot(SpiderBot):
 
     def fetch_image(self, page_id):
         api_page_image = 'https://zh.moegirl.org/api.php?format=json&action=query&pageids={}&prop=pageimages&pithumbsize=500'.format(page_id)
-        response = self.open_url(api_page_image)
+        response = self.open_url(api_page_image, self.opener)
         data = json.loads(response.read().decode('utf-8'))
 
         page_infos = data['query']['pages'][str(page_id)]
@@ -60,11 +61,15 @@ class MoegirlDailyBot(SpiderBot):
         page_id, page_title = self.fetch_page()
 
         page_url = 'https://zh.moegirl.org/{}'.format(quote(page_title, safe='/:'))
+
+        # Avoid HTTP Error 429: Too Many Requests
+        time.sleep(30)
         page_summary = self.fetch_summary(page_url)
         if len(page_url) >= 40:
             page_url = self.shorten_url(page_url)
 
         status = '【{}】{} {}'.format(page_title, page_url, page_summary)
 
+        time.sleep(50)
         page_image = self.fetch_image(page_id)
         self.update_status(status, photo=page_image)
