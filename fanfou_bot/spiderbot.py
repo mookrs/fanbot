@@ -39,10 +39,10 @@ class SpiderBot(BaseBot):
                     response = opener.open(url, timeout=timeout)
                 break
             except URLError as e:
-                self.logger.warning('Exception at:', url)
+                self.logger.warning('Exception at: {}'.format(url))
                 self.logger.warning(e)
             except Exception as e:
-                self.logger.warning('Exception at:', url)
+                self.logger.warning('Exception at: {}'.format(url))
                 self.logger.warning(e)
 
             previous_retry_times += 1
