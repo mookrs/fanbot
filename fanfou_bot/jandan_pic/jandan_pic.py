@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from ..basebot import get_abs_path
 from ..spiderbot import SpiderBot
+from ..db import DBHelper
 
 DATABASE = get_abs_path(__file__, 'jandan_pic.db')
 db = DBHelper(DATABASE)
@@ -10,7 +11,7 @@ PIC_URL = 'https://jandan.net/pic'
 class JandanPicBot(SpiderBot):
     def __init__(self, *args, **kwargs):
         super(JandanPicBot, self).__init__(*args, **kwargs)
-        self.opener = make_opener(('User-agent', 'Mozilla/5.0'), ('Cookie', '458528247=db856X2bSPJdJD3mZ0qNgqHxstlcw%2BC4xtmr%2BPfjKA; jdna=596e6fb28c1bb47f949e65e1ae03f7f5#1466510995815'))
+        self.opener = self.make_opener(('User-agent', 'Mozilla/5.0'), ('Cookie', '458528247=db856X2bSPJdJD3mZ0qNgqHxstlcw%2BC4xtmr%2BPfjKA; jdna=596e6fb28c1bb47f949e65e1ae03f7f5#1466510995815'))
 
     def get_last_page(self):
         soup = self.make_soup(PIC_URL)
