@@ -70,6 +70,6 @@ class MoegirlDailyBot(SpiderBot):
 
         status = '【{}】{} {}'.format(page_title, page_url, page_summary)
 
-        time.sleep(50)
+        time.sleep(60)
         page_image = self.fetch_image(page_id)
         self.update_status(status, photo=page_image)
