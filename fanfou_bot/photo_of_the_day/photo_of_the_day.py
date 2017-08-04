@@ -23,7 +23,7 @@ class PhotoOfTheDayBot(SpiderBot):
 
     def get_recent_page_info(self):
         response = self.open_url(API_IMG_LIST)
-        data = json.load(response)
+        data = json.load(response.read().decode('utf-8'))
 
         relative_url = data[0]['url']
         title = data[0]['title'][5:]
