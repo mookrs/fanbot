@@ -31,14 +31,15 @@ class RedditBot(SpiderBot):
                 submission_img_url = submission.url[:-1] if submission.url.endswith('gifv') else submission.url
 
                 response = self.open_url(submission_img_url)
+                if response is None:
+                    return
 
                 if self.accepted_img_size(response):
                     submission_url = ''
                     photo = response.read()
                 else:
                     # 图片的话显示原始链接比较好，便于没有自动展开短链接功能时手动点进去
-                    if len(submission_url) >= 30:
-                        submission_url = self.shorten_url(submission.url)
+                    submission_url = self.shorten_url(submission.url) if len(submission_url) >= 30 else submission.url
                     submission_url = submission_url + ' '
                     photo = self.fetch_preview_img(preview_img_url)
             else:
