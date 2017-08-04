@@ -53,7 +53,7 @@ class MoegirlDailyBot(SpiderBot):
         if thumbnail is not None:
             thumbnail_source = page_infos['thumbnail']['source']
             thumbnail_response = self.open_url(thumbnail_source)
-            return thumbnail_response.read()
+            return thumbnail_response.read() if thumbnail_response is not None else None
 
         return None
 
