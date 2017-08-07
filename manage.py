@@ -11,6 +11,7 @@ from fanfou_bot.moegirl_daily import moegirl_daily
 from fanfou_bot.photo_of_the_day import photo_of_the_day
 from fanfou_bot.reddit import reddit
 from fanfou_bot.shuowen import shuowen
+from fanfou_bot.word_of_the_day import word_of_the_day
 from fanfou_bot.yupian import yupian
 
 
@@ -27,6 +28,7 @@ def main():
     parser.add_argument('--photo_of_the_day', help='photo_of_the_day bot', action='store_true')
     parser.add_argument('--reddit', help='reddit bot', action='store_true')
     parser.add_argument('--shuowen', help='shuowen bot', action='store_true')
+    parser.add_argument('--word_of_the_day', help='word_of_the_day bot', action='store_true')
     parser.add_argument('--yupian', help='yupian bot', action='store_true')
 
     args = parser.parse_args()
@@ -63,6 +65,9 @@ def main():
         bot.run()
     elif args.shuowen:
         bot = shuowen.ShuowenBot()
+        bot.run()
+    elif args.word_of_the_day:
+        bot = word_of_the_day.WordOfTheDayBot()
         bot.run()
     elif args.yupian:
         bot = yupian.YupianBot()
