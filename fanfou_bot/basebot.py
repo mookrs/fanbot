@@ -114,7 +114,9 @@ class BaseBot(ABC):
                         _timeout=timeout)
             except FanfouHTTPError as e:
                 if e.e.code == 400:
-                    self.logger.warning('Duplicated status: {}'.format(final_status))
+                    # Won't log empty status for pic bot
+                    if final_status:
+                        self.logger.warning('Duplicated status: {}'.format(final_status))
                     final_status += '.'
                 else:
                     self.logger.warning(e)
