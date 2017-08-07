@@ -40,7 +40,7 @@ class RedditBot(SpiderBot):
                 else:
                     # 图片的话显示原始链接比较好，便于没有自动展开短链接功能时手动点进去
                     submission_url = self.shorten_url(submission.url) if len(submission.url) >= 30 else submission.url
-                    submission_url = submission_url + ' '
+                    submission_url = '→' + submission_url + '← '
                     photo = self.fetch_preview_img(preview_img_url)
             else:
                 submission_url = self.shorten_url(submission.url) + ' '
