@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
+
 from ..basebot import get_abs_path
 from ..spiderbot import SpiderBot
 from ..db import DBHelper
@@ -56,12 +59,11 @@ class JandanPicBot(SpiderBot):
                         status = status + ' ' + img_url
                         result = self.update_status(status)
                     else:
-                        result = self.update_status(status, response.read())
+                        result = self.update_status(status, response.read(), timeout=15)
 
-                    status_id = result['id'] if result is not None else None
-
-                    db.execute('INSERT INTO pictrue (`id`, `url`, `status_id`) VALUES (?,?,?)', (item_id, img_url, status_id))
-                    db.commit()
+                    if result is not None:
+                        db.execute('INSERT INTO pictrue (`id`, `url`, `status_id`) VALUES (?,?,?)', (item_id, img_url, result['id']))
+                        db.commit()
 
     def run(self):
         db.execute('CREATE TABLE IF NOT EXISTS pictrue (`id`, `url`, `status_id`)')
