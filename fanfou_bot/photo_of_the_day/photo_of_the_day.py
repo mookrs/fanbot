@@ -57,7 +57,7 @@ class PhotoOfTheDayBot(SpiderBot):
         status = '【{}】{}'.format(title, long_desc)
         if len(status) > 140:
             status = '【{}】{}'.format(title, short_desc)
-        status.replace('你来掌镜摄影师', '摄影师')
+        status = status.replace('你来掌镜摄影师', '摄影师')
 
         response = self.open_url(img_url, self.opener)
         result = self.update_status(status, photo=response.read())
