@@ -30,10 +30,10 @@ class IsItFridayBot(BaseBot):
         with open(image, 'rb') as imagefile:
             return imagefile.read()
 
-    def run(self, is_special=False):
-        status = self.get_status()
+    def run(self, special_image=False, status=None):
+        status = self.get_status() if status is None else status
 
-        if is_special:
+        if special_image:
             imagedata = self.get_random_img('special')
         elif self.today == 5:
             imagedata = self.get_random_img('true')
