@@ -60,7 +60,7 @@ class PhotoOfTheDayBot(SpiderBot):
         status = status.replace('你来掌镜摄影师', '摄影师')
 
         response = self.open_url(img_url, self.opener)
-        result = self.update_status(status, photo=response.read())
+        result = self.update_status(status, photo=response.read(), timeout=30)
 
         if result:
             db.execute('INSERT INTO pictrue (`page_url`, `img_url`) VALUES (?,?)', (page_url, img_url))
