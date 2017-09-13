@@ -119,8 +119,10 @@ class BaseBot(ABC):
                         self.logger.warning('Duplicated status: {}'.format(final_status))
                     final_status += '.'
                 else:
+                    self.logger.warning('Exception when updating status')
                     self.logger.warning(e)
             except Exception as e:
+                self.logger.warning('Exception when updating status')
                 self.logger.warning(e)
 
             previous_retry_times += 1
@@ -148,8 +150,10 @@ class BaseBot(ABC):
                 if e.e.code == 404:
                     self.logger.warning('There is no message: {}'.format(id))
                 else:
+                    self.logger.warning('Exception when destroying status')
                     self.logger.warning(e)
             except Exception as e:
+                self.logger.warning('Exception when destroying status')
                 self.logger.warning(e)
 
             previous_retry_times += 1
@@ -179,6 +183,7 @@ class BaseBot(ABC):
                 break
             except Exception as e:
                 # Will return None
+                self.logger.warning('Exception when getting mentions')
                 self.logger.warning(e)
 
             previous_retry_times += 1
