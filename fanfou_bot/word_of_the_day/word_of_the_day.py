@@ -25,7 +25,7 @@ class WordOfTheDayBot(SpiderBot):
         if not record:
             title = entry.title
             summary = entry.summary
-            link = self.shorten_url(entry.link)
+            link = entry.link
 
             data = (id, title, summary, entry.link)
             db.execute(
@@ -33,7 +33,5 @@ class WordOfTheDayBot(SpiderBot):
             db.commit()
 
             status = '{}: {} {}'.format(title, summary, link)
-            if len(status) > 140:
-                status = '{} {}: {}'.format(link, title, summary)
 
             self.update_status(status)
