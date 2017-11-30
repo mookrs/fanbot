@@ -1,0 +1,5 @@
+beautifulsoup4==4.6.0
+fanpy==0.2.0
+feedparser==5.2.1
+lxml==4.1.1
+praw==5.2.0
