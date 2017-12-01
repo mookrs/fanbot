@@ -33,5 +33,8 @@ class WordOfTheDayBot(SpiderBot):
             db.commit()
 
             status = '{}: {} {}'.format(title, summary, link)
+            status_len = len('{}: {}'.format(title, summary)) + 21  # t.fanfou.com/********
+            if status_len > 140:
+                status = '{} {}: {}'.format(link, title, summary)
 
             self.update_status(status)
