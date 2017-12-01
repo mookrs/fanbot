@@ -104,7 +104,7 @@ settings.py
 token
 *.db
 index.txt
-parser/
+parsers/
 false/
 special/
 true/
