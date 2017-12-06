@@ -1,18 +1,18 @@
 import argparse
 
-from fanfou_bot.analects_chs import analects_chs
-from fanfou_bot.analects_cht import analects_cht
-from fanfou_bot.dictionary import dictionary
-from fanfou_bot.fish import fish
-from fanfou_bot.isitfriday import isitfriday
-from fanfou_bot.jandan import jandan
-from fanfou_bot.jandan_pic import jandan_pic
-from fanfou_bot.moegirl_daily import moegirl_daily
-from fanfou_bot.photo_of_the_day import photo_of_the_day
-from fanfou_bot.reddit import reddit
-from fanfou_bot.shuowen import shuowen
-from fanfou_bot.word_of_the_day import word_of_the_day
-from fanfou_bot.yupian import yupian
+from fanbot.analects_chs import analects_chs
+from fanbot.analects_cht import analects_cht
+from fanbot.dictionary import dictionary
+from fanbot.fish import fish
+from fanbot.isitfriday import isitfriday
+from fanbot.jandan import jandan
+from fanbot.jandan_pic import jandan_pic
+from fanbot.moegirl_daily import moegirl_daily
+from fanbot.photo_of_the_day import photo_of_the_day
+from fanbot.reddit import reddit
+from fanbot.shuowen import shuowen
+from fanbot.word_of_the_day import word_of_the_day
+from fanbot.yupian import yupian
 
 
 def main():

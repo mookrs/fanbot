@@ -115,6 +115,8 @@ class FishBot(BaseBot):
         handled_mentions_file = get_abs_path(__file__, 'handled_mentions.p')
         handled_mentions = pickle.load(open(handled_mentions_file, 'rb')) if os.path.isfile(handled_mentions_file) else deque(maxlen=80)
 
+        print('start')
+
         while True:
             # If failed to get mentions will return None
             mentions = self.get_mentions(count=20)
