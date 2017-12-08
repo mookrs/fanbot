@@ -83,7 +83,7 @@ class FishBot(BaseBot):
             weekend_left = 48 + weekday_left
 
             is_global_status = False
-            if random.random() < 0.65:
+            if random.random() < 0.85:
                 reply_to_user = '@{} '.format(mention['user']['screen_name'])
             else:
                 reply_to_user = ''
@@ -114,8 +114,6 @@ class FishBot(BaseBot):
         # So make handled_mentions bigger than the count of get_mentions().
         handled_mentions_file = get_abs_path(__file__, 'handled_mentions.p')
         handled_mentions = pickle.load(open(handled_mentions_file, 'rb')) if os.path.isfile(handled_mentions_file) else deque(maxlen=80)
-
-        print('start')
 
         while True:
             # If failed to get mentions will return None
