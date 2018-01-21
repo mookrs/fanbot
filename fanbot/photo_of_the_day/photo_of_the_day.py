@@ -34,9 +34,9 @@ class PhotoOfTheDayBot(SpiderBot):
     def get_page_detail(self, page_url):
         soup = self.make_soup(page_url, self.opener)
 
-        img_url = soup.find('ul', {'id': 'pictureurls'}).find('img').get('src')
+        img_url = soup.find('div', {'class': 'tab_imgs'}).find('img').get('src')
 
-        div = soup.find('div', {'class': 'public-p m-p M-L-article del-bottom'})
+        div = soup.find('div', {'class': 'article_con'})
         # 不能用 strip=True，会移除 \n
         if div.div and div.div.get_text().strip() and not div.div.get_text().strip().startswith('摄影：'):
             long_desc = div.div.get_text().strip()
