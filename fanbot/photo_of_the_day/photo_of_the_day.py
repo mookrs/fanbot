@@ -38,7 +38,8 @@ class PhotoOfTheDayBot(SpiderBot):
 
         div = soup.find('div', {'class': 'article_con'})
         # 不能用 strip=True，会移除 \n
-        if div.div and div.div.get_text().strip() and not div.div.get_text().strip().startswith('摄影：'):
+        if div.div and div.div.get_text().strip() and not div.div.get_text().strip().startswith('摄影：') and div.div.has_attr('class') and div.div['class'][0] != 'counsel':
+            # http://www.nationalgeographic.com.cn/photography/photo_of_the_day/5127.html
             long_desc = div.div.get_text().strip()
         else:
             long_desc = div.get_text().strip().split('\n')[0]
@@ -57,7 +58,7 @@ class PhotoOfTheDayBot(SpiderBot):
         status = '【{}】{}'.format(title, long_desc)
         if len(status) > 140:
             status = '【{}】{}'.format(title, short_desc)
-        status = status.replace('你来掌镜摄影师', '摄影师')
+        status = status.replace('你来掌镜摄影师', '摄影师').replace('由你掌镜摄影师', '摄影师')
 
         response = self.open_url(img_url, self.opener)
         result = self.update_status(status, photo=response.read(), timeout=30)
