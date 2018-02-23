@@ -23,7 +23,7 @@ class DictionaryBot(BaseBot):
         # 3 Unicode扩展区或用繁体代替的字
         # 4 Unicode扩展区或用繁体代替的词语
         # 5 重复项 6 页面不存在
-        status = '{} {}'.format(item, explanation) if item_type in (1, 4) else None
+        status = '{} {}'.format(item, explanation) if item_type in (1, 3) else None
         return status
 
     def run(self):
