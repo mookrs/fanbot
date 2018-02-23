@@ -26,7 +26,7 @@ class PhotoOfTheDayBot(SpiderBot):
         data = json.loads(response.read().decode('utf-8'))
 
         relative_url = data[0]['url']
-        title = data[0]['title'][5:]
+        title = data[0]['title'][5:].strip()
         desc = data[0]['description']
 
         return BASE_URL + relative_url, title, desc
