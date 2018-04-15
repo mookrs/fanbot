@@ -11,6 +11,7 @@ from fanbot.moegirl_daily import moegirl_daily
 from fanbot.photo_of_the_day import photo_of_the_day
 from fanbot.reddit import reddit
 from fanbot.shuowen import shuowen
+from fanbot.taoteching import taoteching
 from fanbot.word_of_the_day import word_of_the_day
 from fanbot.yupian import yupian
 
@@ -28,6 +29,7 @@ def main():
     parser.add_argument('--photo_of_the_day', help='photo_of_the_day bot', action='store_true')
     parser.add_argument('--reddit', help='reddit bot', action='store_true')
     parser.add_argument('--shuowen', help='shuowen bot', action='store_true')
+    parser.add_argument('--taoteching', help='taoteching bot', action='store_true')
     parser.add_argument('--word_of_the_day', help='word_of_the_day bot', action='store_true')
     parser.add_argument('--yupian', help='yupian bot', action='store_true')
 
@@ -65,6 +67,9 @@ def main():
         bot.run()
     elif args.shuowen:
         bot = shuowen.ShuowenBot()
+        bot.run()
+    elif args.taoteching:
+        bot = taoteching.TaoTeChingBot()
         bot.run()
     elif args.word_of_the_day:
         bot = word_of_the_day.WordOfTheDayBot()
