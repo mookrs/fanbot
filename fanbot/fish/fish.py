@@ -10,13 +10,13 @@ import time
 from collections import deque
 
 from ..basebot import BaseBot, get_abs_path
-from ..db import DBHelper
 
 pattern = re.compile(r'^@\S+\s([\s\S]+)$')
 
 
 class FishBot(BaseBot):
     zh_weekday = {1: '一', 2: '二', 3: '三', 4: '四', 5: '五', 6: '六', 7: '日'}
+    emoji_int_dict = {1: '1️⃣', 2: '2️⃣', 3: '3️⃣', 4: '4️⃣', 5: '5️⃣', 6: '6️⃣'}
 
     def __init__(self, *args, **kwargs):
         super(FishBot, self).__init__(*args, **kwargs)
@@ -61,50 +61,66 @@ class FishBot(BaseBot):
             week_postion = '\n还有{}小时，周末就结束了。'.format(weekend_left)
         return week_postion
 
+    def command_now(self, mention):
+        now = datetime.datetime.now()
+        pre_g, post_g = self.get_greeting(now)
+
+        month_len = calendar.monthrange(now.year, now.month)[1]
+        year_len = 366 if calendar.isleap(now.year) else 365
+
+        midnight = now.replace(hour=0, minute=0, second=0, microsecond=0)
+        daypass = (now - midnight).seconds
+
+        # 本来用于提示「还有{}天，今年就结束了。」
+        # 因为 140 字限制省略
+        year_left = year_len - now.timetuple().tm_yday
+        month_left = month_len - now.day
+        weekday_left = 120 - ((now.isoweekday() - 1) * 24 + now.hour)
+        weekend_left = 48 + weekday_left
+
+        is_global_status = False
+        if random.random() < 0.85:
+            reply_to_user = '@{} '.format(mention['user']['screen_name'])
+        else:
+            reply_to_user = ''
+            is_global_status = True
+
+        status = '{}{}现在是{}。\n\n这一天已经过去了{}%。\n这一周已经过去了{}%。\n这个月已经过去了{}%。{}\n\n{}'.format(
+            reply_to_user,
+            pre_g,
+            now.strftime('%Y年%m月%d日，星期{}，%H:%M').format(self.zh_weekday[now.isoweekday()]),
+            daypass // 864,
+            ((now.isoweekday() - 1) * 86400 + daypass) // 6048,
+            ((now.day - 1) * 86400 + daypass) // (month_len * 864),
+            self.get_week_postion(weekday_left, weekend_left),
+            post_g)
+
+        if is_global_status:
+            result = self.update_status(status)
+        else:
+            result = self.update_status(status, in_reply_to_status_id=mention['id'])
+
+        return result
+
+    def command_roll(self, mention):
+        emoji_dice = '🎲'
+        emoji_int = self.emoji_int_dict[random.randint(1, 6)]
+        status = '@{} {}{}'.format(mention['user']['screen_name'], emoji_dice, emoji_int)
+        result = self.update_status(status, in_reply_to_status_id=mention['id'])
+        return result
+
     def handle_mention(self, mention):
         match = re.search(pattern, mention['text'])
         command = match.group(1).strip() if match else None
 
         if command == 'now':
-            now = datetime.datetime.now()
-            pre_g, post_g = self.get_greeting(now)
+            result = self.command_now(mention)
+        elif command == 'roll':
+            result = self.command_roll(mention)
+        else:
+            result = ''
 
-            month_len = calendar.monthrange(now.year, now.month)[1]
-            year_len = 366 if calendar.isleap(now.year) else 365
-
-            midnight = now.replace(hour=0, minute=0, second=0, microsecond=0)
-            daypass = (now - midnight).seconds
-
-            # 本来用于提示「还有{}天，今年就结束了。」
-            # 因为 140 字限制省略
-            year_left = year_len - now.timetuple().tm_yday
-            month_left = month_len - now.day
-            weekday_left = 120 - ((now.isoweekday() - 1) * 24 + now.hour)
-            weekend_left = 48 + weekday_left
-
-            is_global_status = False
-            if random.random() < 0.85:
-                reply_to_user = '@{} '.format(mention['user']['screen_name'])
-            else:
-                reply_to_user = ''
-                is_global_status = True
-
-            status = '{}{}现在是{}。\n\n这一天已经过去了{}%。\n这一周已经过去了{}%。\n这个月已经过去了{}%。{}\n\n{}'.format(
-                reply_to_user,
-                pre_g,
-                now.strftime('%Y年%m月%d日，星期{}，%H:%M').format(self.zh_weekday[now.isoweekday()]),
-                daypass // 864,
-                ((now.isoweekday() - 1) * 86400 + daypass) // 6048,
-                ((now.day - 1) * 86400 + daypass) // (month_len * 864),
-                self.get_week_postion(weekday_left, weekend_left),
-                post_g)
-
-            if is_global_status:
-                result = self.update_status(status)
-            else:
-                result = self.update_status(status, in_reply_to_status_id=mention['id'])
-
-            return result
+        return result
 
     def run(self):
         pass
