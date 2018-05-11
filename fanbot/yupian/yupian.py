@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 from ..basebot import BaseBot, get_abs_path
-from ..db import DBHelper
+from ..db import Database
 
 DATABASE = get_abs_path(__file__, 'yupian.db')
-db = DBHelper(DATABASE)
+db = Database(DATABASE)
 
 
 class YupianBot(BaseBot):
@@ -12,7 +12,7 @@ class YupianBot(BaseBot):
 
     def run(self):
         row_id = self._get_current_index()
-        self._increase_index(row_id)
+        self._set_next_index(row_id)
 
         row = db.query('SELECT * FROM yupian WHERE rowid={};'.format(row_id), one=True)
         radical, character, explaination = row['radical'], row['character'], row['explaination']

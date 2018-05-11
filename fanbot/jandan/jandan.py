@@ -4,10 +4,10 @@ import time
 import feedparser
 
 from ..basebot import BaseBot, get_abs_path
-from ..db import DBHelper
+from ..db import Database
 
 DATABASE = get_abs_path(__file__, 'jandan.db')
-db = DBHelper(DATABASE)
+db = Database(DATABASE)
 FEED_URL = 'http://jandan.net/feed'
 
 

@@ -1,39 +1,43 @@
-import logging
+import os
 import sqlite3
 
-logger = logging.getLogger(__name__)
+DATABASE_URL = os.environ.get('DATABASE_URL')
 
 
-class DBHelper(object):
-    def __init__(self, name=None):
-        self.con = None
-        self.cur = None
-        if name:
-            self.open(name)
+class Database(object):
+    """A Database."""
 
-    def open(self, name):
-        try:
-            self.con = sqlite3.connect(name)
-            self.cur = self.con.cursor()
-        except sqlite3.Error as e:
-            logger.error('Error connecting to database!')
-            logger.error(e)
+    def __init__(self, db_path=None):
+        # If no db_path was provided, fallback to $DATABASE_URL.
+        self.db_path = db_path or DATABASE_URL
 
-    def commit(self):
-        if self.con:
-            self.con.commit()
+        if not self.db_path:
+            raise ValueError('You must provide a db_path.')
 
-    def close(self):
-        if self.con:
-            self.con.commit()
-            self.cur.close()
-            self.con.close()
+        self._conn = sqlite3.connect(self.db_path)
+        self._cursor = self._conn.cursor()
 
-    def query(self, sql, args=(), one=False):
-        self.cur.execute(sql, args)
-        rv = [dict((self.cur.description[idx][0], value)
-                   for idx, value in enumerate(row)) for row in self.cur.fetchall()]
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc, val, traceback):
+        self.close()
+
+    def query(self, query, args=(), one=False):
+        """Executes the given SQL query against the Database."""
+        self._cursor.execute(query, args)
+        rv = [dict((self._cursor.description[idx][0], value)
+                   for idx, value in enumerate(row)) for row in self._cursor.fetchall()]
         return (rv[0] if rv else None) if one else rv
 
-    def execute(self, sql, args=()):
-        self.cur.execute(sql, args)
+    def execute(self, query, args=()):
+        self._cursor.execute(query, args)
+
+    def commit(self):
+        self._conn.commit()
+
+    def close(self):
+        """Closes the Database."""
+
+        self.commit()
+        self._conn.close()

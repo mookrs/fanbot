@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 from ..basebot import BaseBot, get_abs_path
-from ..db import DBHelper
+from ..db import Database
 
 DATABASE = get_abs_path(__file__, 'dictionary.db')
-db = DBHelper(DATABASE)
+db = Database(DATABASE)
 
 
 class DictionaryBot(BaseBot):
@@ -12,13 +12,13 @@ class DictionaryBot(BaseBot):
 
     def make_status(self):
         row_id = self._get_current_index()
-        self._increase_index(row_id)
+        self._set_next_index(row_id)
 
         code = 'CP000000000' + str(10000000 + row_id)
-        row = db.query('SELECT * FROM xinhua WHERE code="{}";'.format(code), one=True)
+        row = db.query("SELECT * FROM xinhua WHERE code='{}';".format(code), one=True)
         item, explanation, item_type = row['item'], row['explanation'], row['type']
 
-        # NOTE:
+        # type 表示的含义:
         # 1 单字 2 词语
         # 3 Unicode扩展区或用繁体代替的字
         # 4 Unicode扩展区或用繁体代替的词语
@@ -33,4 +33,5 @@ class DictionaryBot(BaseBot):
 
         chunks = self.get_chunks(status)
         for chunk in chunks:
-            self.update_status(chunk)
+            # self.update_status(chunk)
+            print(chunk)

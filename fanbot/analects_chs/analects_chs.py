@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 from ..basebot import BaseBot, get_abs_path
-from ..db import DBHelper
+from ..db import Database
 
 DATABASE = get_abs_path(__file__, 'analects_chs.db')
-db = DBHelper(DATABASE)
+db = Database(DATABASE)
+STATUS_PREFIX = '【译文】'
 MAX_ID = 241
 
 
@@ -13,13 +14,13 @@ class AnalectsChsBot(BaseBot):
 
     def run(self):
         row_id = self._get_current_index()
-        self._increase_index(0 if row_id == MAX_ID else row_id)
+        self._set_next_index(row_id, MAX_ID)
 
-        row = db.query('SELECT * FROM lunyu WHERE rowid={};'.format(row_id), one=True)
+        row = db.query('SELECT * FROM analects WHERE rowid={};'.format(row_id), one=True)
         content, explanation = row['content'], row['explanation']
 
         status_content = content
-        status_explanation = '【译文】{}'.format(explanation)
+        status_explanation = '{}{}'.format(STATUS_PREFIX, explanation)
 
         chunks_content = self.get_chunks(status_content)
         chunks_explanation = self.get_chunks(status_explanation)

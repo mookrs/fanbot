@@ -3,10 +3,10 @@ import feedparser
 
 from ..basebot import get_abs_path
 from ..spiderbot import SpiderBot
-from ..db import DBHelper
+from ..db import Database
 
 DATABASE = get_abs_path(__file__, 'word_of_the_day.db')
-db = DBHelper(DATABASE)
+db = Database(DATABASE)
 FEED_URL = 'http://www.macmillandictionary.com/wotd/wotdrss.xml'
 
 

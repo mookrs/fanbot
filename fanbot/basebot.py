@@ -59,9 +59,14 @@ class BaseBot(ABC):
         with open(self.index_file) as f:
             return int(f.read().strip())
 
-    def _increase_index(self, current_index):
+    def _set_next_index(self, current_index, max_index=None):
+        if max_index is not None and current_index == max_index:
+            next_index = 1
+        else:
+            next_index = current_index + 1
+
         with open(self.index_file, 'w') as f:
-            f.write(str(current_index + 1))
+            f.write(str(next_index))
 
     def get_chunks(self, status, separtor='...', chunk_length=140, is_reversed=True):
         slice_length_1x = chunk_length - len(separtor)

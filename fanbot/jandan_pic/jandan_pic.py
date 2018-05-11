@@ -9,10 +9,10 @@ from hashlib import md5
 
 from ..basebot import get_abs_path
 from ..spiderbot import SpiderBot
-from ..db import DBHelper
+from ..db import Database
 
 DATABASE = get_abs_path(__file__, 'jandan_pic.db')
-db = DBHelper(DATABASE)
+db = Database(DATABASE)
 PIC_URL = 'https://jandan.net/pic'
 PATTERN_X = re.compile('f\.remove\(\);var c=.+?\(e,"(.+?)"\)')
 
