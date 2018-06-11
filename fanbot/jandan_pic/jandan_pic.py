@@ -117,8 +117,6 @@ class JandanPicBot(SpiderBot):
                 img_count = len(img_urls)
                 text = item_content.p.get_text(strip=True)
 
-                continue
-
                 for index, img_url in enumerate(img_urls, start=1):
                     prefix = '' if img_count == 1 else '({}/{}) '.format(index, img_count)
                     status = prefix + text if index == 1 else prefix
