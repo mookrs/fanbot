@@ -14,7 +14,7 @@ from ..db import Database
 DATABASE = get_abs_path(__file__, 'jandan_pic.db')
 db = Database(DATABASE)
 PIC_URL = 'https://jandan.net/pic'
-PATTERN_X = re.compile('f\.remove\(\);var c=.+?\(e,"(.+?)"\)')
+PATTERN_T = re.compile('f\.remove\(\);var c=.+?\(e,"(.+?)"\)')
 
 
 class JandanPicBot(SpiderBot):
@@ -24,23 +24,7 @@ class JandanPicBot(SpiderBot):
             ('User-agent', 'Mozilla/5.0'),
             ('Cookie', '__cfduid=d669a4b2c49aa6fc3759bab643098b8b21503417105')
         )
-        self.x = ''
-
-    def get_x(self, js_url):
-        js = self.open_url(js_url, self.opener)
-        x = PATTERN_X.search(js.read().decode('utf-8')).group(1)
-        return x
-
-    def get_last_page(self):
-        soup = self.make_soup(PIC_URL, self.opener)
-
-        js_url = soup.find('script', {'src': lambda x: x and '//cdn.jandan.net/static/min/' in x})['src']
-        if not js_url.startswith('http:'):
-            js_url = 'http:' + js_url
-        self.x = self.get_x(js_url)
-
-        span = soup.find('span', {'class': 'current-comment-page'})
-        return int(span.get_text()[1:-1])
+        self.t = ''
 
     def low_score(self, item):
         ooxx = item.find('div', {'class': 'jandan-vote'}, recursive=False).find_all('span')
@@ -50,37 +34,55 @@ class JandanPicBot(SpiderBot):
             return True
         return False
 
+    def add_http_scheme(self, url):
+        if not url.startswith('http'):
+            url = 'http:' + url
+        return url
+
+    def get_t(self, js_url):
+        js = self.open_url(js_url, self.opener)
+        t = PATTERN_T.search(js.read().decode()).group(1)
+        return t
+
     def decrypt(self, n):
-        g = 4
-        x = md5(self.x.encode('utf-8')).hexdigest()
-        w = md5(x[:16].encode('utf-8')).hexdigest()
-        u = md5(x[16:].encode('utf-8')).hexdigest()
+        # e = 0
+        # r = 4
+        # t = md5(self.t.encode()).hexdigest()
+        d = n
+        # p = md5(t[:16].encode()).hexdigest()
+        # o = md5(t[16:].encode()).hexdigest()
 
-        t = n[:g]
-        r = w + md5((w + t).encode('utf-8')).hexdigest()
+        # m = n[:r]
+        # c = p + md5((p + m).encode()).hexdigest()
 
-        n = n[g:]
-        m = base64.b64decode(n + (4 - len(n) % 4) * '=')
+        # n = n[r:]
 
-        h = list(range(256))
-        q = [ord(r[i % 64]) for i in range(256)]
-        o = 0
-        for p in range(256):
-            o = (o + h[p] + q[p]) & 0xFF
-            h[p], h[o] = h[o], h[p]
+        # l = base64.b64decode(n + (-len(n) % 4) * '=')
 
-        l = ''
-        v = 0
-        o = 0
-        for p in m:
-            v = (v + 1) & 0xFF
-            o = (o + h[v]) & 0xFF
-            h[v], h[o] = h[o], h[v]
-            l += chr(int(p) ^ (h[(h[v] + h[o]) & 0xFF]))
-        l = l[26:]
-        if not l.startswith('http:'):
-            l = 'http:' + l
-        return l
+        # k = list(range(256))
+
+        # b = [ord(c[h % len(c)]) for h in range(256)]
+
+        # g = 0
+        # for h in range(256):
+        #     g = (g + k[h] + b[h]) & 0xFF
+        #     k[g], k[h] = k[h], k[g]
+
+        # u = ''
+        # q = 0
+        # g = 0
+        # for h in l:
+        #     q = (q + 1) & 0xFF
+        #     g = (g + k[q]) & 0xFF
+        #     k[g], k[q] = k[q], k[g]
+        #     u += chr(int(h) ^ (k[(k[q] + k[g]) & 0xFF]))
+
+        # u = u[26:]
+        u = base64.b64decode(d + (-len(d) % 4) * '=').decode()  # Without `(-len(d) % 4) * '='` is also OK
+
+        u = re.sub(r'(\/\/\w+\.sinaimg\.cn\/)(\w+)(\/.+\.(gif|jpg|jpeg))', r'\1large\3', u)
+        u = self.add_http_scheme(u)
+        return u
 
     def get_img_urls(self, img_hash_tags):
         img_urls = []
@@ -88,17 +90,18 @@ class JandanPicBot(SpiderBot):
             img_hash = img_hash_tag.extract().get_text()
             img_url = self.decrypt(img_hash)
 
-            img_url_parts = img_url.split('/')
-            img_url_parts[3] = 'large'
-            img_url = '/'.join(img_url_parts)
-
+            print(img_hash)
             img_urls.append(img_url)
 
         return img_urls
 
     def process_page(self, page):
-        page_url = '{}/page-{}'.format(PIC_URL, page)
-        soup = self.make_soup(page_url, self.opener, parser='lxml')
+        soup = self.make_soup(page, self.opener, parser='lxml')
+
+        if not self.t:
+            js_url = soup.find('script', {'src': lambda x: x and '//cdn.jandan.net/static/min/' in x})['src']
+            js_url = self.add_http_scheme(js_url)
+            self.t = self.get_t(js_url)
 
         items = soup.find_all('div', {'class': 'row'})
         for item in reversed(items):
@@ -113,6 +116,8 @@ class JandanPicBot(SpiderBot):
                 img_urls = self.get_img_urls(img_hash_tags)
                 img_count = len(img_urls)
                 text = item_content.p.get_text(strip=True)
+
+                continue
 
                 for index, img_url in enumerate(img_urls, start=1):
                     prefix = '' if img_count == 1 else '({}/{}) '.format(index, img_count)
@@ -129,9 +134,13 @@ class JandanPicBot(SpiderBot):
                         db.execute('INSERT INTO pictrue (`id`, `url`, `status_id`) VALUES (?,?,?)', (item_id, img_url, result['id']))
                         db.commit()
 
+        a_tag = soup.find('a', {'class': 'previous-comment-page'})
+        next_page = self.add_http_scheme(a_tag['href'])
+        return next_page
+
     def run(self):
         db.execute('CREATE TABLE IF NOT EXISTS pictrue (`id`, `url`, `status_id`)')
 
-        last_page = self.get_last_page()
-        for page in range(last_page - 1, last_page + 1):
-            self.process_page(page)
+        next_page = PIC_URL
+        for _ in range(3):
+            next_page = self.process_page(next_page)
