@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 import json
+import time
+
+from selenium import webdriver
 
 from ..basebot import get_abs_path
 from ..spiderbot import SpiderBot
@@ -16,8 +19,8 @@ class PhotoOfTheDayBot(SpiderBot):
     def __init__(self, *args, **kwargs):
         super(PhotoOfTheDayBot, self).__init__(*args, **kwargs)
         self.opener = self.make_opener(
-            ('User-agent', 'Mozilla/5.0'),
-            ('Cookie', '__cfduid=d5f95d969c7daf37541465d15f329b3221525791837')
+            ('User-agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3472.3 Safari/537.36'),
+            ('Cookie', '__cfduid=d51e9fc1b3edeb0ed2500b5d3ca951c9a1530962673')
         )
 
     def page_exist(self, page_url):
@@ -25,8 +28,16 @@ class PhotoOfTheDayBot(SpiderBot):
         return True if record else False
 
     def get_recent_page_info(self):
-        response = self.open_url(API_IMG_LIST, self.opener)
-        data = json.loads(response.read().decode('utf-8'))
+        options = webdriver.ChromeOptions()
+        options.add_argument('--headless')
+        options.add_argument('--disable-gpu')
+
+        driver = webdriver.Chrome(chrome_options=options)
+        driver.get(API_IMG_LIST)
+        time.sleep(7)
+        data = json.loads(driver.find_element_by_tag_name('body').text)
+
+        driver.quit()
 
         relative_url = data[0]['url']
         title = data[0]['title'][5:].strip()
