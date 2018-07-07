@@ -3,11 +3,11 @@ import praw
 
 from ..basebot import get_abs_path
 from ..spiderbot import SpiderBot
-from ..db import DBHelper
+from ..db import Database
 from ..settings import RedditClientId, RedditClientSecret, RedditUserAgent
 
 DATABASE = get_abs_path(__file__, 'reddit.db')
-db = DBHelper(DATABASE)
+db = Database(DATABASE)
 
 
 class RedditBot(SpiderBot):
