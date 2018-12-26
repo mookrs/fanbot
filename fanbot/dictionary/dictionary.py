@@ -20,9 +20,9 @@ class DictionaryBot(BaseBot):
 
         # type 表示的含义:
         # 1 单字 2 词语
-        # 3 Unicode扩展区或用繁体代替的字
-        # 4 Unicode扩展区或用繁体代替的词语
-        # 5 重复项 6 页面不存在
+        # 3 Unicode 扩展区的字
+        # 4 生造字或词语，未来可能出现在 Unicode 中
+        # 5 重复项或页面不存在
         status = '{} {}'.format(item, explanation) if item_type in (1, 3) else None
         return status
 
