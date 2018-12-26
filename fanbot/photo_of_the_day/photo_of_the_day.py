@@ -101,9 +101,9 @@ class PhotoOfTheDayBot(SpiderBot):
                 status = '【{}】{}'.format(title, short_desc)
             status = self.replace_redundant_words(status)
 
-            response = self.open_url(img_url, self.opener)
-            result = self.update_status(status, photo=response.read(), timeout=30)
-
+            self.driver.get(img_url)
+            photo = self.driver.page_source
+            result = self.update_status(status, photo=photo, timeout=30)
             # Saves to database
             if result:
                 db.execute('INSERT INTO pictrue (`page_url`, `img_url`) VALUES (?,?)', (page_url, img_url))
