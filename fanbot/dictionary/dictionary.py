@@ -33,5 +33,4 @@ class DictionaryBot(BaseBot):
 
         chunks = self.get_chunks(status)
         for chunk in chunks:
-            # self.update_status(chunk)
-            print(chunk)
+            self.update_status(chunk)
