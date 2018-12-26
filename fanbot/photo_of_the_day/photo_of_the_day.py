@@ -20,7 +20,7 @@ class PhotoOfTheDayBot(SpiderBot):
         super(PhotoOfTheDayBot, self).__init__(*args, **kwargs)
         self.opener = self.make_opener(
             ('User-agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3486.0 Safari/537.36'),
-            ('Cookie', 'cf_clearance=5d2887690b78f38a04c245c3e1148ea4e68c4bb6-1531959417-57600; __cfduid=dbff4391d05275efceef6a2576a758bdd1530863123')
+            ('Cookie', '__cfduid=db7791bbb8182c3ee76430120b1f288ab1545836412; yjs_ab_lid=309e16e7baea1ee42be1fd029d97574f504d5; yjs_ab_score=300; cf_clearance=3f02f084c6d4545fdf54842348e695b15e57d654-1545836417-57600-150')
         )
 
     def page_exist(self, page_url):
@@ -28,20 +28,23 @@ class PhotoOfTheDayBot(SpiderBot):
         return True if record else False
 
     def get_recent_page_info(self):
-        options = webdriver.ChromeOptions()
-        options.add_argument('--headless')
-        options.add_argument('--disable-gpu')
+        response = self.open_url(API_IMG_LIST, self.opener)
+        data = json.loads(response.read().decode('utf-8'))
 
-        driver = webdriver.Chrome('/usr/local/bin/chromedriver', chrome_options=options)
-        driver.get(API_IMG_LIST)
-        time.sleep(7)
+        # options = webdriver.ChromeOptions()
+        # options.add_argument('--headless')
+        # options.add_argument('--disable-gpu')
 
-        cookies = driver.get_cookies()
-        cookie_list = [cookie['name'] + '=' + cookie['value'] for cookie in cookies]
-        cookie_str = '; '.join(cookie_list)
+        # driver = webdriver.Chrome('/usr/local/bin/chromedriver', chrome_options=options)
+        # driver.get(API_IMG_LIST)
+        # time.sleep(7)
 
-        data = json.loads(driver.find_element_by_tag_name('body').text)
-        driver.quit()
+        # cookies = driver.get_cookies()
+        # cookie_list = [cookie['name'] + '=' + cookie['value'] for cookie in cookies]
+        # cookie_str = '; '.join(cookie_list)
+
+        # data = json.loads(driver.find_element_by_tag_name('body').text)
+        # driver.quit()
 
         relative_url = data[0]['url']
         title = data[0]['title'][5:].strip()
