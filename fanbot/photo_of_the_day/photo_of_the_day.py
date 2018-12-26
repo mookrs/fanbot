@@ -37,7 +37,7 @@ class PhotoOfTheDayBot(SpiderBot):
 
         driver = webdriver.Chrome('/usr/local/bin/chromedriver', chrome_options=options)
         driver.get(API_IMG_LIST)
-        time.sleep(7)
+        time.sleep(10)
 
         cookies = driver.get_cookies()
         cookie_list = [cookie['name'] + '=' + cookie['value'] for cookie in cookies]
