@@ -56,6 +56,9 @@ class SpiderBot(BaseBot):
         html = self.open_url(url, opener, retry_times, retry_interval, timeout)
         return BeautifulSoup(html, parser)
 
+    def make_soup_with_html(self, html, parser='html.parser'):
+        return BeautifulSoup(html, parser)
+
     def shorten_url(self, url_long):
         api = API_TEMPLATE.format(quote(url_long, safe=':/'))
         response = self.open_url(api)
