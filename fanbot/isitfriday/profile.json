@@ -55,5 +55,11 @@
         ],
         "image_type": "custom",
         "image_path": "false/aru6.6/6070.png"
+    },
+    "20181228": {
+        "statuses": [
+            "对！今天是2018年最后一个星期五！"
+        ],
+        "image_type": "true"
     }
 }
