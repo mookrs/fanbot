@@ -19,8 +19,8 @@ class PhotoOfTheDayBot(SpiderBot):
     def __init__(self, *args, **kwargs):
         super(PhotoOfTheDayBot, self).__init__(*args, **kwargs)
         self.opener = self.make_opener(
-            ('User-agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3472.3 Safari/537.36'),
-            ('Cookie', '__cfduid=d51e9fc1b3edeb0ed2500b5d3ca951c9a1530962673')
+            ('User-agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3486.0 Safari/537.36'),
+            ('Cookie', 'cf_clearance=5d2887690b78f38a04c245c3e1148ea4e68c4bb6-1531959417-57600; __cfduid=dbff4391d05275efceef6a2576a758bdd1530863123')
         )
 
     def page_exist(self, page_url):
@@ -32,11 +32,15 @@ class PhotoOfTheDayBot(SpiderBot):
         options.add_argument('--headless')
         options.add_argument('--disable-gpu')
 
-        driver = webdriver.Chrome(chrome_options=options)
+        driver = webdriver.Chrome('/usr/local/bin/chromedriver', chrome_options=options)
         driver.get(API_IMG_LIST)
         time.sleep(7)
-        data = json.loads(driver.find_element_by_tag_name('body').text)
 
+        cookies = driver.get_cookies()
+        cookie_list = [cookie['name'] + '=' + cookie['value'] for cookie in cookies]
+        cookie_str = '; '.join(cookie_list)
+
+        data = json.loads(driver.find_element_by_tag_name('body').text)
         driver.quit()
 
         relative_url = data[0]['url']
