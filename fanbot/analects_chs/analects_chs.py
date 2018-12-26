@@ -5,7 +5,7 @@ from ..db import Database
 DATABASE = get_abs_path(__file__, 'analects_chs.db')
 db = Database(DATABASE)
 STATUS_PREFIX = '【译文】'
-MAX_ID = 241
+MAX_ID = 247
 
 
 class AnalectsChsBot(BaseBot):
