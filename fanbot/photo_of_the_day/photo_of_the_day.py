@@ -71,7 +71,8 @@ class PhotoOfTheDayBot(SpiderBot):
         return long_desc
 
     def get_page_detail(self, page_url):
-        html = self.driver.get(page_url).page_source
+        self.driver.get(page_url)
+        html = self.driver.page_source
         soup = self.make_soup_with_html(html, 'lxml')
 
         img_url = soup.find('div', {'class': 'tab_imgs'}).find('img').get('src')
