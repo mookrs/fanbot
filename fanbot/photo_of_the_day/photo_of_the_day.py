@@ -45,7 +45,6 @@ class PhotoOfTheDayBot(SpiderBot):
 
         response = self.open_url(API_IMG_LIST, self.opener)
         data = json.loads(response.read().decode('utf-8'))
-        print(data)
 
         relative_url = data[0]['url']
         title = data[0]['title'][5:].strip()
