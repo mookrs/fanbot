@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 import json
-import time
+# import time
 
-from selenium import webdriver
+# from selenium import webdriver
 
 from ..basebot import get_abs_path
 from ..spiderbot import SpiderBot
@@ -18,32 +18,34 @@ API_IMG_LIST = 'http://www.ngchina.com.cn/index.php?a=loadmorebya&catid=39&model
 class PhotoOfTheDayBot(SpiderBot):
     def __init__(self, *args, **kwargs):
         super(PhotoOfTheDayBot, self).__init__(*args, **kwargs)
-        self.driver = self.init_driver()
-        self.opener = None
+        self.opener = self.make_opener(
+            ('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3642.0 Safari/537.36'),
+            ('Cookie', 'cf_clearance=659f463d4cd13ba504a4ff23e5e50aefc1bd01a0-1545889065-57600-150; __cfduid=d4485a961d407f544006a125f0835a2541545889059')
+        )
 
-    def init_driver(self):
-        options = webdriver.ChromeOptions()
-        options.add_argument('--headless')
-        options.add_argument('--disable-gpu')
-        return webdriver.Chrome('/usr/local/bin/chromedriver', chrome_options=options)
+    # def init_driver(self):
+    #     options = webdriver.ChromeOptions()
+    #     options.add_argument('--headless')
+    #     options.add_argument('--disable-gpu')
+    #     return webdriver.Chrome('/usr/local/bin/chromedriver', chrome_options=options)
 
     def page_exist(self, page_url):
         record = db.query('SELECT * FROM pictrue WHERE page_url=?', (page_url,))
         return True if record else False
 
     def get_recent_page_info(self):
-        self.driver.get(API_IMG_LIST)
-        time.sleep(10)
+        # self.driver.get(API_IMG_LIST)
+        # time.sleep(10)
 
-        cookies = self.driver.get_cookies()
-        cookie_list = [cookie['name'] + '=' + cookie['value'] for cookie in cookies]
-        cookie_str = '; '.join(cookie_list)
-        self.opener = self.make_opener(
-            ('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3642.0 Safari/537.36'),
-            ('Cookie', cookie_str)
-        )
+        # cookies = self.driver.get_cookies()
+        # cookie_list = [cookie['name'] + '=' + cookie['value'] for cookie in cookies if cookie['domain'] == '.ngchina.com.cn']
+        # cookie_str = '; '.join(cookie_list)
 
-        data = json.loads(self.driver.find_element_by_tag_name('body').text)
+        # data = json.loads(self.driver.find_element_by_tag_name('body').text)
+
+        response = self.open_url(API_IMG_LIST, self.opener)
+        data = json.loads(response.read().decode('utf-8'))
+        print(data)
 
         relative_url = data[0]['url']
         title = data[0]['title'][5:].strip()
@@ -71,9 +73,11 @@ class PhotoOfTheDayBot(SpiderBot):
         return long_desc
 
     def get_page_detail(self, page_url):
-        self.driver.get(page_url)
-        html = self.driver.page_source
-        soup = self.make_soup_with_html(html, 'lxml')
+        # self.driver.get(page_url)
+        # html = self.driver.page_source
+        # soup = self.make_soup_with_html(html, 'lxml')
+
+        soup = self.make_soup(page_url, self.opener)
 
         img_url = soup.find('div', {'class': 'tab_imgs'}).find('img').get('src')
 
@@ -87,26 +91,22 @@ class PhotoOfTheDayBot(SpiderBot):
         return new_status
 
     def run(self):
-        try:
-            db.execute('CREATE TABLE IF NOT EXISTS pictrue (`page_url`, `img_url`)')
+        db.execute('CREATE TABLE IF NOT EXISTS pictrue (`page_url`, `img_url`)')
 
-            page_url, title, short_desc = self.get_recent_page_info()
-            if self.page_exist(page_url):
-                return
+        page_url, title, short_desc = self.get_recent_page_info()
+        if self.page_exist(page_url):
+            return
 
-            img_url, long_desc = self.get_page_detail(page_url)
+        img_url, long_desc = self.get_page_detail(page_url)
 
-            status = '【{}】{}'.format(title, long_desc)
-            if len(status) > 140:
-                status = '【{}】{}'.format(title, short_desc)
-            status = self.replace_redundant_words(status)
+        status = '【{}】{}'.format(title, long_desc)
+        if len(status) > 140:
+            status = '【{}】{}'.format(title, short_desc)
+        status = self.replace_redundant_words(status)
 
-            self.driver.get(img_url)
-            photo = self.driver.page_source
-            result = self.update_status(status, photo=photo, timeout=30)
-            # Saves to database
-            if result:
-                db.execute('INSERT INTO pictrue (`page_url`, `img_url`) VALUES (?,?)', (page_url, img_url))
-                db.commit()
-        finally:
-            self.driver.quit()
+        response = self.open_url(img_url, self.opener)
+        result = self.update_status(status, photo=response.read(), timeout=30)
+        # Saves to database
+        if result:
+            db.execute('INSERT INTO pictrue (`page_url`, `img_url`) VALUES (?,?)', (page_url, img_url))
+            db.commit()
