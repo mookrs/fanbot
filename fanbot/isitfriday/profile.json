@@ -49,34 +49,73 @@
             "今天星期日。"
         ]
     },
-    "20181111": {
+    "20190202": {
         "statuses": [
-            "今天是买买买的星期日！"
+            "今天是「难道你还没放假吗」的星期六。"
         ],
         "image_type": "custom",
-        "image_path": "false/aru6.6/6070.png"
+        "image_path": "false/aru6.6/x099.png"
     },
-    "20181228": {
+    "20190203": {
         "statuses": [
-            "对！今天是2018年最后一个星期五！"
+            "今天是快要过年的星期日。"
         ],
-        "image_type": "true"
+        "image_type": "custom",
+        "image_path": "true/aru6.6/x041.png"
     },
-    "20181229": {
+    "20190204": {
         "statuses": [
-            "今天是再上一天班的星期六。"
-        ]
-    },
-    "20181231": {
-        "statuses": [
-            "今天是2018年的最后一天（还是个放假的星期一）。"
+            "今天是阖家团圆的除夕！"
         ],
-        "image_type": "true"
+        "image_type": "custom",
+        "image_path": "newyear/x060.png"
     },
-    "20190101": {
+    "20190205": {
         "statuses": [
-            "今天是元旦！新年快乐！"
+            "春节快乐~恭喜发财~"
         ],
-        "image_type": "true"
+        "image_type": "custom",
+        "image_path": "newyear/x070.png"
+    },
+    "20190206": {
+        "statuses": [
+            "今天是初二。"
+        ],
+        "image_type": "custom",
+        "image_path": "newyear/x021.png"
+    },
+    "20190207": {
+        "statuses": [
+            "今天是初三。"
+        ],
+        "image_type": "custom",
+        "image_path": "newyear/x094.png"
+    },
+    "20190208": {
+        "statuses": [
+            "今天是初四。"
+        ],
+        "image_type": "custom",
+        "image_path": "newyear/x091.png"
+    },
+    "20190209": {
+        "statuses": [
+            "今天是初五。"
+        ],
+        "image_type": "custom",
+        "image_path": "newyear/x080.png"
+    },
+    "20190210": {
+        "statuses": [
+            "今天是不想复工的星期日。"
+        ],
+        "image_type": "custom",
+        "image_path": "false/aru6.6/8111.png"
+    },
+    "20190211": {
+        "statuses": [
+            "今天是万事开头难的星期一。"
+        ],
+        "image_type": "false"
     }
 }
