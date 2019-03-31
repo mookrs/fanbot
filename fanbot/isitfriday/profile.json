@@ -117,5 +117,12 @@
             "今天是万事开头难的星期一。"
         ],
         "image_type": "false"
+    },
+    "20190401": {
+        "statuses": [
+            "对！今天是星期五！"
+        ],
+        "image_type": "custom",
+        "image_path": "newyear/滑稽.jpg"
     }
 }
