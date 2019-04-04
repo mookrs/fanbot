@@ -118,11 +118,10 @@
         ],
         "image_type": "false"
     },
-    "20190401": {
+    "20190405": {
         "statuses": [
-            "对！今天是星期五！"
+            "对！今天是假期中的星期五！"
         ],
-        "image_type": "custom",
-        "image_path": "newyear/滑稽.jpg"
+        "image_type": "true"
     }
 }
