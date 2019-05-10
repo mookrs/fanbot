@@ -35,7 +35,7 @@ class JandanPicBot(SpiderBot):
         img_urls = []
         for img_tag in img_tags:
             img_url = img_tag.get('href') or img_tag.get('src')
-            img_url = self.add_http_scheme(img_tag['href'])
+            img_url = self.add_http_scheme(img_url)
             img_urls.append(img_url)
         return img_urls
 
