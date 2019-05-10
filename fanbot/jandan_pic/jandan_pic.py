@@ -34,6 +34,7 @@ class JandanPicBot(SpiderBot):
     def get_img_urls(self, img_tags):
         img_urls = []
         for img_tag in img_tags:
+            img_url = img_tag.get('href') or img_tag.get('src')
             img_url = self.add_http_scheme(img_tag['href'])
             img_urls.append(img_url)
         return img_urls
@@ -50,10 +51,10 @@ class JandanPicBot(SpiderBot):
             item_id = item_content.span.a.get_text()
             record = db.query('SELECT * FROM pictrue WHERE id=?', (item_id,))
             if not record:
-                img_tags = item_content.find_all('a', {'class': 'view_img_link'})
+                img_tags = item_content.find_all('a', {'class': 'view_img_link'}) or item_content.find_all('img')
                 img_urls = self.get_img_urls(img_tags)
                 img_count = len(img_urls)
-                text = item_content.p.get_text(strip=True)
+                text = item_content.p.get_text(strip=True).replace('[查看原图]', '')
 
                 for index, img_url in enumerate(img_urls, start=1):
                     prefix = '' if img_count == 1 else '({}/{}) '.format(index, img_count)
