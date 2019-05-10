@@ -102,12 +102,15 @@ ENV/
 
 .idea/
 
+
+cron.txt
 settings.py
-token
+token*
 *.db
 index.txt
 parsers/
 false/
-special/
 true/
+special/
+newyear/
 handled_mentions.p
