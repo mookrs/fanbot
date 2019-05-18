@@ -10,9 +10,9 @@ DATABASE = get_abs_path(__file__, 'reddit.db')
 db = Database(DATABASE)
 
 
-class RedditBot(SpiderBot):
+class Bot(SpiderBot):
     def __init__(self, *args, **kwargs):
-        super(RedditBot, self).__init__(*args, **kwargs)
+        super(Bot, self).__init__(*args, **kwargs)
 
     def fetch_preview_img(self, preview_img_url):
         return None if preview_img_url is None else self.open_url(preview_img_url).read()

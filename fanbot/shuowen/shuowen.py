@@ -6,9 +6,9 @@ DATABASE = get_abs_path(__file__, 'shuowen.db')
 db = Database(DATABASE)
 
 
-class ShuowenBot(BaseBot):
+class Bot(BaseBot):
     def __init__(self, *args, **kwargs):
-        super(ShuowenBot, self).__init__(*args, **kwargs)
+        super(Bot, self).__init__(*args, **kwargs)
 
     def run(self):
         row_id = self._get_current_index()

@@ -6,9 +6,9 @@ from urllib.request import quote
 from ..spiderbot import SpiderBot
 
 
-class MoegirlDailyBot(SpiderBot):
+class Bot(SpiderBot):
     def __init__(self, *args, **kwargs):
-        super(MoegirlDailyBot, self).__init__(*args, **kwargs)
+        super(Bot, self).__init__(*args, **kwargs)
         self.opener = self.make_opener(('User-agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3269.3 Safari/537.36'))
 
     def fetch_page(self):

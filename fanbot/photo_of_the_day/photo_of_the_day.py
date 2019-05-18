@@ -15,9 +15,9 @@ BASE_URL = 'http://www.ngchina.com.cn'
 API_IMG_LIST = 'http://www.ngchina.com.cn/index.php?a=loadmorebya&catid=39&modelid=3'
 
 
-class PhotoOfTheDayBot(SpiderBot):
+class Bot(SpiderBot):
     def __init__(self, *args, **kwargs):
-        super(PhotoOfTheDayBot, self).__init__(*args, **kwargs)
+        super(Bot, self).__init__(*args, **kwargs)
         self.opener = self.make_opener(
             ('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3642.0 Safari/537.36'),
             ('Cookie', 'cf_clearance=659f463d4cd13ba504a4ff23e5e50aefc1bd01a0-1545889065-57600-150; __cfduid=d4485a961d407f544006a125f0835a2541545889059')

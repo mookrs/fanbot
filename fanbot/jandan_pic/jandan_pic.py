@@ -10,9 +10,9 @@ db = Database(DATABASE)
 PIC_URL = 'https://jandan.net/pic'
 
 
-class JandanPicBot(SpiderBot):
+class Bot(SpiderBot):
     def __init__(self, *args, **kwargs):
-        super(JandanPicBot, self).__init__(*args, **kwargs)
+        super(Bot, self).__init__(*args, **kwargs)
         self.opener = self.make_opener(
             ('User-agent', 'Mozilla/5.0'),
             ('Cookie', '__cfduid=d669a4b2c49aa6fc3759bab643098b8b21503417105')

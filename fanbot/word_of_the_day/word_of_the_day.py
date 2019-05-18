@@ -10,9 +10,9 @@ db = Database(DATABASE)
 FEED_URL = 'http://www.macmillandictionary.com/wotd/wotdrss.xml'
 
 
-class WordOfTheDayBot(SpiderBot):
+class Bot(SpiderBot):
     def __init__(self, *args, **kwargs):
-        super(WordOfTheDayBot, self).__init__(*args, **kwargs)
+        super(Bot, self).__init__(*args, **kwargs)
 
     def run(self):
         db.execute('CREATE TABLE IF NOT EXISTS wotd (`id`, `title`, `summary`, `link`)')

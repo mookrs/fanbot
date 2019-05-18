@@ -11,9 +11,9 @@ db = Database(DATABASE)
 FEED_URL = 'http://jandan.net/feed'
 
 
-class JandanBot(BaseBot):
+class Bot(BaseBot):
     def __init__(self, *args, **kwargs):
-        super(JandanBot, self).__init__(*args, **kwargs)
+        super(Bot, self).__init__(*args, **kwargs)
 
     def https_to_http(self, link):
         if link[4] == 's':

@@ -8,9 +8,9 @@ STATUS_PREFIX = '【譯文】'
 MAX_ID = 46
 
 
-class AnalectsChtBot(BaseBot):
+class Bot(BaseBot):
     def __init__(self, *args, **kwargs):
-        super(AnalectsChtBot, self).__init__(*args, **kwargs)
+        super(Bot, self).__init__(*args, **kwargs)
 
     def run(self):
         row_id = self._get_current_index()

@@ -14,12 +14,12 @@ from ..basebot import BaseBot, get_abs_path
 pattern = re.compile(r'^@\S+\s([\s\S]+)$')
 
 
-class FishBot(BaseBot):
+class Bot(BaseBot):
     zh_weekday = {1: '一', 2: '二', 3: '三', 4: '四', 5: '五', 6: '六', 7: '日'}
     emoji_int_dict = {1: '1️⃣', 2: '2️⃣', 3: '3️⃣', 4: '4️⃣', 5: '5️⃣', 6: '6️⃣'}
 
     def __init__(self, *args, **kwargs):
-        super(FishBot, self).__init__(*args, **kwargs)
+        super(Bot, self).__init__(*args, **kwargs)
 
     def get_greeting(self, now):
         hour = now.strftime('%H')

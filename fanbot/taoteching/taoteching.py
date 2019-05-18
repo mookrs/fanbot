@@ -7,9 +7,9 @@ db = Database(DATABASE)
 MAX_ID = 81
 
 
-class TaoTeChingBot(BaseBot):
+class Bot(BaseBot):
     def __init__(self, *args, **kwargs):
-        super(TaoTeChingBot, self).__init__(*args, **kwargs)
+        super(Bot, self).__init__(*args, **kwargs)
 
     def run(self):
         row_id = self._get_current_index()

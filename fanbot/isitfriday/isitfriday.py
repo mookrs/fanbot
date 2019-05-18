@@ -7,13 +7,13 @@ import random
 from ..basebot import BaseBot, get_abs_path
 
 
-class IsItFridayBot(BaseBot):
+class Bot(BaseBot):
     now = datetime.datetime.now()
     weekday = str(now.isoweekday())
     date = now.strftime('%Y%m%d')
 
     def __init__(self, *args, **kwargs):
-        super(IsItFridayBot, self).__init__(*args, **kwargs)
+        super(Bot, self).__init__(*args, **kwargs)
 
     def load_profile(self):
         with open(get_abs_path(__file__, 'profile.json')) as f:

@@ -6,9 +6,9 @@ DATABASE = get_abs_path(__file__, 'dictionary.db')
 db = Database(DATABASE)
 
 
-class DictionaryBot(BaseBot):
+class Bot(BaseBot):
     def __init__(self, *args, **kwargs):
-        super(DictionaryBot, self).__init__(*args, **kwargs)
+        super(Bot, self).__init__(*args, **kwargs)
 
     def make_status(self):
         row_id = self._get_current_index()
