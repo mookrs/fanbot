@@ -1,89 +1,37 @@
 import argparse
+from importlib import import_module
 
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--analects_chs', help='analects_chs bot', action='store_true')
-    parser.add_argument('--analects_cht', help='analects_cht bot', action='store_true')
-    parser.add_argument('--dictionary', help='dictionary bot', action='store_true')
-    parser.add_argument('--fish', help='fish bot', action='store_true')
-    parser.add_argument('--isitfriday', help='isitfriday bot', action='store_true')
-    parser.add_argument('--jandan', help='jandan bot', action='store_true')
-    parser.add_argument('--jandan_pic', help='jandan_pic bot', action='store_true')
-    parser.add_argument('--moegirl_daily', help='moegirl_daily bot', action='store_true')
-    parser.add_argument('--photo_of_the_day', help='photo_of_the_day bot', action='store_true')
-    parser.add_argument('--reddit', help='reddit bot', action='store_true')
-    parser.add_argument('--shuowen', help='shuowen bot', action='store_true')
-    parser.add_argument('--taoteching', help='taoteching bot', action='store_true')
-    parser.add_argument('--word_of_the_day', help='word_of_the_day bot', action='store_true')
-    parser.add_argument('--yupian', help='yupian bot', action='store_true')
+    parser.add_argument('--analects_chs', action='store_true')
+    parser.add_argument('--analects_cht', action='store_true')
+    parser.add_argument('--dictionary', action='store_true')
+    parser.add_argument('--fish', action='store_true')
+    parser.add_argument('--isitfriday', action='store_true')
+    parser.add_argument('--jandan', action='store_true')
+    parser.add_argument('--jandan_pic', action='store_true')
+    parser.add_argument('--moegirl_daily', action='store_true')
+    parser.add_argument('--photo_of_the_day', action='store_true')
+    parser.add_argument('--reddit', action='store_true')
+    parser.add_argument('--shuowen', action='store_true')
+    parser.add_argument('--taoteching', action='store_true')
+    parser.add_argument('--word_of_the_day', action='store_true')
+    parser.add_argument('--yupian', action='store_true')
     return parser.parse_args()
 
 
 def main():
     """Main program.
 
-    Parse arguments, run bot.
+    Parse arguments and run bot.
     """
     args = parse_args()
-
-    if args.analects_chs:
-        from fanbot.analects_chs import analects_chs
-        bot = analects_chs.AnalectsChsBot()
-        bot.run()
-    elif args.analects_cht:
-        from fanbot.analects_cht import analects_cht
-        bot = analects_cht.AnalectsChtBot()
-        bot.run()
-    elif args.dictionary:
-        from fanbot.dictionary import dictionary
-        bot = dictionary.DictionaryBot()
-        bot.run()
-    elif args.fish:
-        from fanbot.fish import fish
-        bot = fish.FishBot()
-        # Here is start() for long run
-        bot.start()
-    elif args.isitfriday:
-        from fanbot.isitfriday import isitfriday
-        bot = isitfriday.IsItFridayBot()
-        bot.run()
-    elif args.jandan:
-        from fanbot.jandan import jandan
-        bot = jandan.JandanBot()
-        bot.run()
-    elif args.jandan_pic:
-        from fanbot.jandan_pic import jandan_pic
-        bot = jandan_pic.JandanPicBot()
-        bot.run()
-    elif args.moegirl_daily:
-        from fanbot.moegirl_daily import moegirl_daily
-        bot = moegirl_daily.MoegirlDailyBot()
-        bot.run()
-    elif args.photo_of_the_day:
-        from fanbot.photo_of_the_day import photo_of_the_day
-        bot = photo_of_the_day.PhotoOfTheDayBot()
-        bot.run()
-    elif args.reddit:
-        from fanbot.reddit import reddit
-        bot = reddit.RedditBot()
-        bot.run()
-    elif args.shuowen:
-        from fanbot.shuowen import shuowen
-        bot = shuowen.ShuowenBot()
-        bot.run()
-    elif args.taoteching:
-        from fanbot.taoteching import taoteching
-        bot = taoteching.TaoTeChingBot()
-        bot.run()
-    elif args.word_of_the_day:
-        from fanbot.word_of_the_day import word_of_the_day
-        bot = word_of_the_day.WordOfTheDayBot()
-        bot.run()
-    elif args.yupian:
-        from fanbot.yupian import yupian
-        bot = yupian.YupianBot()
-        bot.run()
+    for bot_name in vars(args):
+        if getattr(args, bot_name) is True:
+            module = import_module(f'fanbot.{bot_name}.{bot_name}')
+            bot = module.Bot()
+            bot.run()
 
 
 if __name__ == '__main__':
