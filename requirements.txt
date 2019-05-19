@@ -1,6 +1,6 @@
-beautifulsoup4==4.6.3
+beautifulsoup4==4.7.1
 fanpy==0.2.0
 feedparser==5.2.1
-lxml==4.2.5
-praw==6.0.0
+lxml==4.3.3
+praw==6.2.0
 selenium==3.141.0
