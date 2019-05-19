@@ -123,6 +123,9 @@ class BaseBot(ABC):
                     if final_status:
                         self.logger.warning('Duplicated status: {}'.format(final_status))
                     final_status += '.'
+                elif e.e.code == 500:
+                    # HACK: API responses 500 sometimes successed
+                    break
                 else:
                     self.logger.warning('Exception when updating status')
                     self.logger.warning(e)
@@ -135,7 +138,6 @@ class BaseBot(ABC):
                 break
 
             time.sleep(retry_interval)
-            continue
 
     def destroy_status(self, id=None,
                        retry_times=RETRY_TIMES, retry_interval=RETRY_INTERVAL,
