@@ -127,7 +127,7 @@ class BaseBot(ABC):
                     # HACK: API responses 500 sometimes successed
                     break
                 else:
-                    self.logger.warning('Exception when updating status')
+                    self.logger.warning('FanfouHTTPError when updating status')
                     self.logger.warning(e)
             except Exception as e:
                 self.logger.warning('Exception when updating status')
