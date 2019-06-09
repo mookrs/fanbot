@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import calendar
 import datetime
 import pickle
@@ -15,7 +14,7 @@ pattern = re.compile(r'^@\S+\s([\s\S]+)$')
 
 
 class Bot(BaseBot):
-    zh_weekday = {1: '一', 2: '二', 3: '三', 4: '四', 5: '五', 6: '六', 7: '日'}
+    zh_weekday_dict = {1: '一', 2: '二', 3: '三', 4: '四', 5: '五', 6: '六', 7: '日'}
     emoji_int_dict = {1: '1️⃣', 2: '2️⃣', 3: '3️⃣', 4: '4️⃣', 5: '5️⃣', 6: '6️⃣'}
 
     def __init__(self, *args, **kwargs):
@@ -55,10 +54,10 @@ class Bot(BaseBot):
 
     def get_week_postion(self, weekday_left, weekend_left):
         week_postion = ''
-        if weekday_left < 49 and weekday_left > 0:
-            week_postion = '\n还有{}小时，周末就到了。'.format(weekday_left)
-        elif weekend_left < 11:
-            week_postion = '\n还有{}小时，周末就结束了。'.format(weekend_left)
+        if weekday_left <= 48 and weekday_left > 0:
+            week_postion = f'\n还有{weekday_left}小时，周末就到了。'
+        elif weekend_left <= 10:
+            week_postion = f'\n还有{weekend_left}小时，周末就结束了。'
         return week_postion
 
     def command_now(self, mention):
@@ -71,16 +70,15 @@ class Bot(BaseBot):
         midnight = now.replace(hour=0, minute=0, second=0, microsecond=0)
         daypass = (now - midnight).seconds
 
-        # 本来用于提示「还有{}天，今年就结束了。」
-        # 因为 140 字限制省略
+        # 本来用于提示「还有xx天，今年就结束了。」, 因为 140 字限制省略
         year_left = year_len - now.timetuple().tm_yday
         month_left = month_len - now.day
         weekday_left = 120 - ((now.isoweekday() - 1) * 24 + now.hour)
         weekend_left = 48 + weekday_left
 
-        is_global_status = False
         if random.random() < 0.85:
             reply_to_user = '@{} '.format(mention['user']['screen_name'])
+            is_global_status = False
         else:
             reply_to_user = ''
             is_global_status = True
@@ -88,7 +86,7 @@ class Bot(BaseBot):
         status = '{}{}现在是{}。\n\n这一天已经过去了{}%。\n这一周已经过去了{}%。\n这个月已经过去了{}%。{}\n\n{}'.format(
             reply_to_user,
             pre_g,
-            now.strftime('%Y年%m月%d日，星期{}，%H:%M').format(self.zh_weekday[now.isoweekday()]),
+            now.strftime('%Y年%m月%d日，星期{}，%H:%M').format(self.zh_weekday_dict[now.isoweekday()]),
             daypass // 864,
             ((now.isoweekday() - 1) * 86400 + daypass) // 6048,
             ((now.day - 1) * 86400 + daypass) // (month_len * 864),
@@ -123,28 +121,23 @@ class Bot(BaseBot):
         return result
 
     def run(self):
-        pass
-
-    def start(self):
         # If some mentions are deleted, handled mentions will be handled again.
         # So make handled_mentions bigger than the count of get_mentions().
-        handled_mentions_file = get_abs_path(__file__, 'handled_mentions.p')
-        handled_mentions = pickle.load(open(handled_mentions_file, 'rb')) if os.path.isfile(handled_mentions_file) else deque(maxlen=80)
+        handled_mentions_file = get_abs_path(__file__, 'handled_mentions.txt')
+        with open(handled_mentions_file) as f:
+            handled_mentions = deque(maxlen=50)
+            for line in f:
+                handled_mentions.append(line.strip())
 
-        while True:
-            # If failed to get mentions will return None
-            mentions = self.get_mentions(count=20)
-            reversed_mentions = reversed(mentions) if mentions is not None else []
-            for mention in reversed_mentions:
-                if mention['id'] in handled_mentions:
-                    continue
+        # If failed to get mentions will return None
+        mentions = self.get_mentions(count=20)
+        reversed_mentions = reversed(mentions) if mentions is not None else []
+        for mention in reversed_mentions:
+            if mention['id'] in handled_mentions:
+                continue
+            result = self.handle_mention(mention)
+            if result is not None:
                 handled_mentions.append(mention['id'])
 
-                result = self.handle_mention(mention)
-
-                # Failed updating status, remove the failed mention
-                if result is None:
-                    handled_mentions.pop()
-
-            pickle.dump(handled_mentions, open(handled_mentions_file, 'wb'))
-            time.sleep(30)
+        with open(handled_mentions_file, 'w') as f:
+            f.write('\n'.join(handled_mentions))
