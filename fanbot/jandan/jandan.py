@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import time
 
 import feedparser
@@ -20,9 +19,6 @@ class Bot(BaseBot):
             return link[0:4] + link[5:]
         return link
 
-    def replace_danger_words(self, s):
-        return s.replace('强奸', '强*')
-
     def run(self):
         db.execute('CREATE TABLE IF NOT EXISTS jandan (`guid`, `url`, `title`, `date_added`)')
 
@@ -40,8 +36,6 @@ class Bot(BaseBot):
                 db.commit()
 
                 description = entry.description
-                description = self.replace_danger_words(description)
-                title = self.replace_danger_words(title)
 
                 status = '【{}】{} {}'.format(title, link, description)
                 self.update_status(status)
