@@ -37,5 +37,5 @@ class Bot(BaseBot):
 
                 description = entry.description
 
-                status = '【{}】{} {}'.format(title, link, description)
+                status = f'【{title}】{link} {description}'
                 self.update_status(status)
