@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 from ..basebot import BaseBot, get_abs_path
 from ..db import Database
 
@@ -16,11 +15,11 @@ class Bot(BaseBot):
         row_id = self._get_current_index()
         self._set_next_index(row_id, MAX_ID)
 
-        row = db.query('SELECT * FROM analects WHERE rowid={};'.format(row_id), one=True)
+        row = db.query(f'SELECT * FROM analects WHERE rowid={row_id};', one=True)
         content, explanation = row['content'], row['explanation']
 
         status_content = content
-        status_explanation = '{}{}'.format(STATUS_PREFIX, explanation)
+        status_explanation = f'{STATUS_PREFIX}{explanation}'
 
         chunks_content = self.get_chunks(status_content)
         chunks_explanation = self.get_chunks(status_explanation)
