@@ -111,6 +111,5 @@ index.txt
 parsers/
 false/
 true/
-special/
-newyear/
+holiday/
 handled_mentions.p
