@@ -103,7 +103,6 @@ ENV/
 .idea/
 
 
-cron.txt
 settings.py
 token*
 *.db
@@ -112,4 +111,4 @@ parsers/
 false/
 true/
 holiday/
-handled_mentions.p
+handled_mentions.txt
