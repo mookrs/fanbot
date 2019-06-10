@@ -127,10 +127,10 @@ class BaseBot(ABC):
                     # HACK: API responses 500 sometimes successed
                     break
                 else:
-                    self.logger.warning('FanfouHTTPError when updating status')
+                    self.logger.warning(f'FanfouHTTPError when updating status: {final_status}')
                     self.logger.warning(e)
             except Exception as e:
-                self.logger.warning('Exception when updating status')
+                self.logger.warning(f'Exception when updating status: {final_status}')
                 self.logger.warning(e)
 
             previous_retry_times += 1
@@ -202,7 +202,4 @@ class BaseBot(ABC):
 
     @abstractmethod
     def run(self):
-        pass
-
-    def start(self):
         pass
