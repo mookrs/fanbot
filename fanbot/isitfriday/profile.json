@@ -55,5 +55,17 @@
         ],
         "image_type": "custom",
         "image_path": "holiday/x099.png"
+    },
+    "20190912": {
+        "statuses": [
+            "今天是即将放假的星期四！"
+        ],
+        "image_type": "true"
+    },
+    "20190913": {
+        "statuses": [
+            "对！今天是月圆人更圆的中秋佳节！"
+        ],
+        "image_type": "true"
     }
 }
