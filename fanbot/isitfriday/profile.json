@@ -62,10 +62,96 @@
         ],
         "image_type": "true"
     },
-    "20190913": {
+    "20190923": {
         "statuses": [
-            "对！今天是月圆人更圆的中秋佳节！"
+            "不是，今天是想偷懒的星期一。"
+        ],
+        "image_type": "custom",
+        "image_path": "holiday/toulan/1.jpeg"
+    },
+    "20190924": {
+        "statuses": [
+            "不是。"
+        ],
+        "image_type": "custom",
+        "image_path": "holiday/toulan/2.jpeg"
+    },
+    "20190925": {
+        "statuses": [
+            "并不是。"
+        ],
+        "image_type": "custom",
+        "image_path": "holiday/toulan/3.jpeg"
+    },
+    "20190926": {
+        "statuses": [
+            "不是，今天是好想偷懒的星期四。"
+        ],
+        "image_type": "custom",
+        "image_path": "holiday/toulan/4.jpeg"
+    },
+    "20190927": {
+        "statuses": [
+            "是的，不过今天是本周只有一天假的星期五。"
+        ],
+        "image_type": "custom",
+        "image_path": "holiday/toulan/5.jpeg"
+    },
+    "20190928": {
+        "statuses": [
+            "今天是偷懒的星期六。"
+        ],
+        "image_type": "custom",
+        "image_path": "holiday/toulan/6.jpeg"
+    },
+    "20190929": {
+        "statuses": [
+            "今天只想放假偷懒的星期日。"
+        ],
+        "image_type": "custom",
+        "image_path": "holiday/toulan/7.jpeg"
+    },
+    "20190930": {
+        "statuses": [
+            "今天是即将放假的星期一！万岁！"
         ],
         "image_type": "true"
+    },
+    "20191001": {
+        "statuses": [
+            "今天是国庆节！"
+        ],
+        "image_type": "true"
+    },
+    "20191002": {
+        "statuses": [
+            "今天星期三。"
+        ]
+    },
+    "20191003": {
+        "statuses": [
+            "今天星期四。"
+        ]
+    },
+    "20191004": {
+        "statuses": [
+            "今天星期五。"
+        ]
+    },
+    "20191005": {
+        "statuses": [
+            "今天星期六。"
+        ]
+    },
+    "20191006": {
+        "statuses": [
+            "今天星期日。"
+        ]
+    },
+    "20191007": {
+        "statuses": [
+            "今天是假期余额不足的星期一。"
+        ],
+        "image_type": "false"
     }
 }
