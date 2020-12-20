@@ -182,5 +182,12 @@
         "statuses": [
             "今天是还能再躺一天的星期一。"
         ]
+    },
+    "20201221": {
+        "statuses": [
+            "今天是冬至的星期一。"
+        ],
+        "image_type": "custom",
+        "image_path": "holiday/x063.png"
     }
 }
